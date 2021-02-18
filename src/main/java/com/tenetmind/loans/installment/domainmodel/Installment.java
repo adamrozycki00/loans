@@ -1,5 +1,6 @@
 package com.tenetmind.loans.installment.domainmodel;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.util.Currency;
 @Entity
 @Table(name = "installments")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class Installment {
 

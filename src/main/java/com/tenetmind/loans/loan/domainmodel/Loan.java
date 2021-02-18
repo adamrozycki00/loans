@@ -3,6 +3,7 @@ package com.tenetmind.loans.loan.domainmodel;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.installment.domainmodel.Installment;
 import com.tenetmind.loans.operation.domainmodel.Operation;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "loans")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class Loan {
 

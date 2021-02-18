@@ -3,23 +3,15 @@ package com.tenetmind.loans.operation.domainmodel;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "operations")
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class Operation {
+public class OperationDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private LocalDate date;
     private Loan loan;
     private String type;
