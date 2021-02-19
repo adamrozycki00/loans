@@ -1,16 +1,24 @@
 package com.tenetmind.loans.installment.domainmodel;
 
+import com.tenetmind.loans.currency.domainmodel.CurrencyMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class InstallmentMapper {
+
+    @Autowired
+    private CurrencyMapper currencyMapper;
 
     public Installment mapToEntity(final InstallmentDto dto) {
         return new Installment(
                 dto.getId(),
                 dto.getDate(),
                 dto.getNumber(),
-                dto.getCurrency(),
+                currencyMapper.mapToEntity(dto.getCurrencyDto()),
                 dto.getPrincipal(),
                 dto.getInterest());
     }
@@ -20,9 +28,21 @@ public class InstallmentMapper {
                 entity.getId(),
                 entity.getDate(),
                 entity.getNumber(),
-                entity.getCurrency(),
+                currencyMapper.mapToDto(entity.getCurrency()),
                 entity.getPrincipal(),
                 entity.getInterest());
+    }
+
+    public List<InstallmentDto> mapToDtoList(final List<Installment> installments) {
+        return installments.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<Installment> mapToEntityList(final List<InstallmentDto> installmentDtos) {
+        return installmentDtos.stream()
+                .map(this::mapToEntity)
+                .collect(Collectors.toList());
     }
 
 }

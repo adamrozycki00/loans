@@ -1,6 +1,6 @@
 package com.tenetmind.loans.interestrate.domainmodel;
 
-import com.tenetmind.loans.currency.domainmodel.Currency;
+import com.tenetmind.loans.currency.domainmodel.CurrencyDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,10 +11,10 @@ import java.time.LocalDate;
 @Getter
 public class InterestRateDto {
 
-    private Long id;
-    private String name;
-    private LocalDate date;
-    private Currency currency;
-    private BigDecimal rate;
+    private final Long id;
+    private final String name;
+    private final LocalDate date;
+    private final CurrencyDto currencyDto;
+    private final BigDecimal rate;
 
 }

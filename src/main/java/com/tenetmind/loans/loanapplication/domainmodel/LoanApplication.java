@@ -1,5 +1,6 @@
 package com.tenetmind.loans.loanapplication.domainmodel;
 
+import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Currency;
 
 @Entity
 @Table(name = "loan_applications")

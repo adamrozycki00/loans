@@ -1,6 +1,6 @@
 package com.tenetmind.loans.currencyrate.domainmodel;
 
-import com.tenetmind.loans.currency.domainmodel.Currency;
+import com.tenetmind.loans.currency.domainmodel.CurrencyDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,7 +13,7 @@ public class CurrencyRateDto {
 
     private final Long id;
     private final LocalDate date;
-    private final Currency currency;
+    private final CurrencyDto currencyDto;
     private final BigDecimal rate;
 
 }

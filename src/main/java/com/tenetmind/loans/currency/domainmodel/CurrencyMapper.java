@@ -8,17 +8,13 @@ public class CurrencyMapper {
     public Currency mapToEntity(final CurrencyDto dto) {
         return new Currency(
                 dto.getId(),
-                dto.getName(),
-                dto.getRates(),
-                dto.getInterestRates());
+                dto.getName());
     }
 
     public CurrencyDto mapToDto(final Currency entity) {
         return new CurrencyDto(
                 entity.getId(),
-                entity.getName(),
-                entity.getRates(),
-                entity.getInterestRates());
+                entity.getName());
     }
 
 }

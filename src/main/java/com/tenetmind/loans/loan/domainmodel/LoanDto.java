@@ -1,8 +1,8 @@
 package com.tenetmind.loans.loan.domainmodel;
 
-import com.tenetmind.loans.currency.domainmodel.Currency;
-import com.tenetmind.loans.installment.domainmodel.Installment;
-import com.tenetmind.loans.operation.domainmodel.Operation;
+import com.tenetmind.loans.currency.domainmodel.CurrencyDto;
+import com.tenetmind.loans.installment.domainmodel.InstallmentDto;
+import com.tenetmind.loans.operation.domainmodel.OperationDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -16,7 +16,7 @@ public class LoanDto {
 
     private final Long id;
     private final LocalDateTime date;
-    private final Currency currency;
+    private final CurrencyDto currencyDto;
     private final BigDecimal amount;
     private final Integer period;
     private final BigDecimal baseRate;
@@ -24,7 +24,7 @@ public class LoanDto {
     private final BigDecimal balance;
     private final Integer numberOfInstallmentsPaid;
     private final String status;
-    private final List<Installment> schedule;
-    private final List<Operation> operations;
+    private final List<InstallmentDto> scheduleDto;
+    private final List<OperationDto> operationDtos;
 
 }
