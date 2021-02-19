@@ -5,6 +5,9 @@ import com.tenetmind.loans.loan.domainmodel.LoanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component
 public class LoanApplicationMapper {
 
@@ -36,6 +39,12 @@ public class LoanApplicationMapper {
                 entity.getMarginRate(),
                 entity.getStatus(),
                 loanMapper.mapToDto(entity.getLoan()));
+    }
+
+    public List<LoanApplicationDto> mapToDtoList(final List<LoanApplication> loanApplications) {
+        return loanApplications.stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
 }
