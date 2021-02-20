@@ -1,7 +1,7 @@
 package com.tenetmind.loans.loanapplication.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.CurrencyDto;
-import com.tenetmind.loans.loan.domainmodel.LoanDto;
+import com.tenetmind.loans.customer.domainmodel.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,6 +14,7 @@ public class LoanApplicationDto {
 
     private final Long id;
     private final LocalDateTime date;
+    private final UserDto userDto;
     private final CurrencyDto currencyDto;
     private final BigDecimal amount;
     private final Integer period;

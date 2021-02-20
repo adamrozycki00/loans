@@ -1,7 +1,7 @@
 package com.tenetmind.loans.loanapplication.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
-import com.tenetmind.loans.loan.domainmodel.Loan;
+import com.tenetmind.loans.customer.domainmodel.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "loan_applications")
+@Table(name = "applications")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -22,6 +22,10 @@ public class LoanApplication {
     private Long id;
 
     private LocalDateTime date;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "currency_id")

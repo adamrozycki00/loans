@@ -1,6 +1,7 @@
 package com.tenetmind.loans.loan.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
+import com.tenetmind.loans.customer.domainmodel.User;
 import com.tenetmind.loans.installment.domainmodel.Installment;
 import com.tenetmind.loans.operation.domainmodel.Operation;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,10 @@ public class Loan {
     private Long id;
 
     private LocalDateTime date;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "currency_id")
