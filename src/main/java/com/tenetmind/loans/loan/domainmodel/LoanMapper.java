@@ -1,7 +1,7 @@
 package com.tenetmind.loans.loan.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.CurrencyMapper;
-import com.tenetmind.loans.customer.domainmodel.UserMapper;
+import com.tenetmind.loans.customer.domainmodel.CustomerMapper;
 import com.tenetmind.loans.installment.domainmodel.InstallmentMapper;
 import com.tenetmind.loans.operation.domainmodel.OperationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class LoanMapper {
 
     @Autowired
-    private UserMapper userMapper;
+    private CustomerMapper customerMapper;
 
     @Autowired
     private CurrencyMapper currencyMapper;
@@ -29,7 +29,7 @@ public class LoanMapper {
         return new Loan(
                 dto.getId(),
                 dto.getDate(),
-                userMapper.mapToEntity(dto.getUserDto()),
+                customerMapper.mapToEntity(dto.getCustomerDto()),
                 currencyMapper.mapToEntity(dto.getCurrencyDto()),
                 dto.getAmount(),
                 dto.getPeriod(),
@@ -46,7 +46,7 @@ public class LoanMapper {
         return new LoanDto(
                 entity.getId(),
                 entity.getDate(),
-                userMapper.mapToDto(entity.getUser()),
+                customerMapper.mapToDto(entity.getCustomer()),
                 currencyMapper.mapToDto(entity.getCurrency()),
                 entity.getAmount(),
                 entity.getPeriod(),

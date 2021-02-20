@@ -1,8 +1,8 @@
 package com.tenetmind.loans.customer.controller;
 
-import com.tenetmind.loans.customer.domainmodel.UserDto;
-import com.tenetmind.loans.customer.domainmodel.UserMapper;
-import com.tenetmind.loans.customer.service.UserService;
+import com.tenetmind.loans.customer.domainmodel.CustomerDto;
+import com.tenetmind.loans.customer.domainmodel.CustomerMapper;
+import com.tenetmind.loans.customer.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,41 +15,41 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping("/v1/users")
-public class UserController {
+@RequestMapping("/v1/customers")
+public class CustomerController {
 
     @Autowired
-    private UserService service;
+    private CustomerService service;
 
     @Autowired
-    private UserMapper mapper;
+    private CustomerMapper mapper;
 
     @RequestMapping(value = "", method = GET)
-    public List<UserDto> getAll() {
+    public List<CustomerDto> getAll() {
         return mapper.mapToDtoList(service.findAll());
     }
 
     @RequestMapping(value = "/{id}", method = GET)
-    public UserDto get(@PathVariable Long id) throws UserNotFoundException {
-        return mapper.mapToDto(service.findById(id).orElseThrow(UserNotFoundException::new));
+    public CustomerDto get(@PathVariable Long id) throws CustomerNotFoundException {
+        return mapper.mapToDto(service.findById(id).orElseThrow(CustomerNotFoundException::new));
     }
 
     @RequestMapping(value = "/{id}", method = DELETE)
-    public void delete(@PathVariable Long id) throws UserNotFoundException {
+    public void delete(@PathVariable Long id) throws CustomerNotFoundException {
         try {
             service.deleteById(id);
         } catch (Exception e) {
-            throw new UserNotFoundException();
+            throw new CustomerNotFoundException();
         }
     }
 
     @RequestMapping(value = "", method = PUT)
-    public UserDto update(@RequestBody UserDto currencyDto) {
+    public CustomerDto update(@RequestBody CustomerDto currencyDto) {
         return mapper.mapToDto(service.save(mapper.mapToEntity(currencyDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void create(@RequestBody UserDto currencyDto) {
+    public void create(@RequestBody CustomerDto currencyDto) {
         service.save(mapper.mapToEntity(currencyDto));
     }
 

@@ -6,23 +6,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class UserMapper {
+public class CustomerMapper {
 
-    public User mapToEntity(final UserDto dto) {
-        return new User(
+    public Customer mapToEntity(final CustomerDto dto) {
+        return new Customer(
                 dto.getId(),
                 dto.getFirstName(),
                 dto.getLastName());
     }
 
-    public UserDto mapToDto(final User entity) {
-        return new UserDto(
+    public CustomerDto mapToDto(final Customer entity) {
+        return new CustomerDto(
                 entity.getId(),
                 entity.getFirstName(),
                 entity.getLastName());
     }
 
-    public List<UserDto> mapToDtoList(final List<User> currencies) {
+    public List<CustomerDto> mapToDtoList(final List<Customer> currencies) {
         return currencies.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());

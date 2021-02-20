@@ -1,7 +1,7 @@
 package com.tenetmind.loans.customer.service;
 
-import com.tenetmind.loans.customer.domainmodel.User;
-import com.tenetmind.loans.customer.repository.UserRepository;
+import com.tenetmind.loans.customer.domainmodel.Customer;
+import com.tenetmind.loans.customer.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,21 +9,21 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class CustomerService {
 
     @Autowired
-    private UserRepository repository;
+    private CustomerRepository repository;
 
-    public List<User> findAll() {
+    public List<Customer> findAll() {
         return repository.findAll();
     }
 
-    public Optional<User> findById(Long id) {
+    public Optional<Customer> findById(Long id) {
         return repository.findById(id);
     }
 
-    public User save(User user) {
-        return repository.save(user);
+    public Customer save(Customer customer) {
+        return repository.save(customer);
     }
 
     public void deleteById(Long id) {
