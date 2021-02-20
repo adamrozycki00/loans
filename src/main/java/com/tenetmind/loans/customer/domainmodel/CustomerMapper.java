@@ -10,7 +10,6 @@ public class CustomerMapper {
 
     public Customer mapToEntity(final CustomerDto dto) {
         return new Customer(
-                dto.getId(),
                 dto.getFirstName(),
                 dto.getLastName());
     }

@@ -15,7 +15,6 @@ public class InterestRateMapper {
 
     public InterestRate mapToEntity(final InterestRateDto dto) {
         return new InterestRate(
-                dto.getId(),
                 dto.getName(),
                 dto.getDate(),
                 currencyMapper.mapToEntity(dto.getCurrencyDto()),

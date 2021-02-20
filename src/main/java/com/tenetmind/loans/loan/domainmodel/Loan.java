@@ -4,19 +4,18 @@ import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.customer.domainmodel.Customer;
 import com.tenetmind.loans.installment.domainmodel.Installment;
 import com.tenetmind.loans.operation.domainmodel.Operation;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "loans")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class Loan {
 
@@ -57,5 +56,22 @@ public class Loan {
             fetch = FetchType.LAZY
     )
     private List<Operation> operations;
+
+    public Loan(LocalDateTime date, Customer customer, Currency currency,
+                BigDecimal amount, Integer period, BigDecimal baseRate,
+                BigDecimal marginRate) {
+        this.date = date;
+        this.customer = customer;
+        this.currency = currency;
+        this.amount = amount;
+        this.period = period;
+        this.baseRate = baseRate;
+        this.marginRate = marginRate;
+        this.balance = amount;
+        this.numberOfInstallmentsPaid = 0;
+        this.status = "New";
+        this.schedule = new ArrayList<>();
+        this.operations = new ArrayList<>();
+    }
 
 }

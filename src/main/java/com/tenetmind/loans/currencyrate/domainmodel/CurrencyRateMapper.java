@@ -15,7 +15,6 @@ public class CurrencyRateMapper {
 
     public CurrencyRate mapToEntity(final CurrencyRateDto dto) {
         return new CurrencyRate(
-                dto.getId(),
                 dto.getDate(),
                 currencyMapper.mapToEntity(dto.getCurrencyDto()),
                 dto.getRate());

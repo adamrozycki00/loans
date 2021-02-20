@@ -1,10 +1,11 @@
 package com.tenetmind.loans.loanapplication.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
-import com.tenetmind.loans.currency.service.CurrencyService;
+import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.customer.domainmodel.Customer;
-import com.tenetmind.loans.customer.service.CustomerService;
-import com.tenetmind.loans.loanapplication.service.LoanApplicationService;
+import com.tenetmind.loans.customer.repository.CustomerRepository;
+import com.tenetmind.loans.loanapplication.repository.LoanApplicationRepository;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,30 +22,75 @@ import static org.junit.Assert.assertEquals;
 public class LoanApplicationTest {
 
     @Autowired
-    private CustomerService customerService;
+    private CustomerRepository customerRepository;
 
     @Autowired
-    private CurrencyService currencyService;
+    private CurrencyRepository currencyRepository;
 
     @Autowired
-    private LoanApplicationService service;
+    private LoanApplicationRepository loanApplicationRepository;
+
+    @After
+    public void cleanUp() {
+        loanApplicationRepository.deleteAll();
+        currencyRepository.deleteAll();
+        customerRepository.deleteAll();
+    }
 
     @Test
     public void shouldCreateLoanApplication() {
         //given
-        Customer customer = new Customer(1L, "John", "Smith");
-        Currency pln = new Currency(1L, "PLN");
-        LoanApplication application = new LoanApplication(1L, LocalDateTime.now(), customer, pln,
-                new BigDecimal(1000), 12, new BigDecimal(.05), "new");
+        Customer customer = new Customer("John", "Smith");
+        Currency pln = new Currency("PLN");
+        LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
+                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
 
         //when
-        customerService.save(customer);
-        currencyService.save(pln);
-        service.save(application);
-        int applicationsSize = service.findAll().size();
+        customerRepository.save(customer);
+        currencyRepository.save(pln);
+        loanApplicationRepository.save(application);
+        int applicationsSize = loanApplicationRepository.findAll().size();
 
         //then
         assertEquals(1, applicationsSize);
+    }
+
+    @Test
+    public void shouldDeleteLoanApplicationAndNotDeleteCurrency() {
+        //given
+        Customer customer = new Customer("John", "Smith");
+        Currency pln = new Currency("PLN");
+        LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
+                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+        customerRepository.save(customer);
+        currencyRepository.save(pln);
+        loanApplicationRepository.save(application);
+
+        //when
+        loanApplicationRepository.deleteAll();
+        int currenciesSize = currencyRepository.findAll().size();
+
+        //then
+        assertEquals(1, currenciesSize);
+    }
+
+    @Test
+    public void shouldDeleteLoanApplicationAndNotDeleteCustomer() {
+        //given
+        Customer customer = new Customer("John", "Smith");
+        Currency pln = new Currency("PLN");
+        LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
+                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+        customerRepository.save(customer);
+        currencyRepository.save(pln);
+        loanApplicationRepository.save(application);
+
+        //when
+        loanApplicationRepository.deleteAll();
+        int customersSize = customerRepository.findAll().size();
+
+        //then
+        assertEquals(1, customersSize);
     }
 
 }

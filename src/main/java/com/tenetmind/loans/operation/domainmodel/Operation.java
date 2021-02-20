@@ -1,7 +1,6 @@
 package com.tenetmind.loans.operation.domainmodel;
 
 import com.tenetmind.loans.loan.domainmodel.Loan;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +11,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "operations")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 public class Operation {
 
@@ -28,5 +26,12 @@ public class Operation {
 
     private String type;
     private BigDecimal amount;
+
+    public Operation(LocalDate date, Loan loan, String type, BigDecimal amount) {
+        this.date = date;
+        this.loan = loan;
+        this.type = type;
+        this.amount = amount;
+    }
 
 }

@@ -19,7 +19,6 @@ public class InstallmentMapper {
 
     public Installment mapToEntity(final InstallmentDto dto) {
         return new Installment(
-                dto.getId(),
                 dto.getDate(),
                 loanMapper.mapToEntity(dto.getLoanDto()),
                 dto.getNumber(),

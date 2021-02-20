@@ -27,19 +27,13 @@ public class LoanMapper {
 
     public Loan mapToEntity(final LoanDto dto) {
         return new Loan(
-                dto.getId(),
                 dto.getDate(),
                 customerMapper.mapToEntity(dto.getCustomerDto()),
                 currencyMapper.mapToEntity(dto.getCurrencyDto()),
                 dto.getAmount(),
                 dto.getPeriod(),
                 dto.getBaseRate(),
-                dto.getMarginRate(),
-                dto.getBalance(),
-                dto.getNumberOfInstallmentsPaid(),
-                dto.getStatus(),
-                installmentMapper.mapToEntityList(dto.getScheduleDto()),
-                operationMapper.mapToEntityList(dto.getOperationDtos()));
+                dto.getMarginRate());
     }
 
     public LoanDto mapToDto(final Loan entity) {

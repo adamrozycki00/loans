@@ -19,7 +19,7 @@ public class CustomerTest {
     @Test
     public void shouldCreateCustomer() {
         //given
-        Customer customer = new Customer(1L, "John", "Smith");
+        Customer customer = new Customer("John", "Smith");
 
         //when
         service.save(customer);

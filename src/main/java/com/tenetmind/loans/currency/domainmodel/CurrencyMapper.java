@@ -10,7 +10,6 @@ public class CurrencyMapper {
 
     public Currency mapToEntity(final CurrencyDto dto) {
         return new Currency(
-                dto.getId(),
                 dto.getName());
     }
 

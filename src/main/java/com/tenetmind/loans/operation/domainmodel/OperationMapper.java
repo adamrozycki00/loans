@@ -15,7 +15,6 @@ public class OperationMapper {
 
     public Operation mapToEntity(final OperationDto dto) {
         return new Operation(
-                dto.getId(),
                 dto.getDate(),
                 loanMapper.mapToEntity(dto.getLoanDto()),
                 dto.getType(),
