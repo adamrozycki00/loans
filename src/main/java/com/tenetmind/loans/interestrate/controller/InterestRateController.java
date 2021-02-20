@@ -15,7 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/interest_rates")
 public class InterestRateController {
 
     @Autowired
@@ -24,17 +24,17 @@ public class InterestRateController {
     @Autowired
     private InterestRateMapper mapper;
 
-    @RequestMapping(value = "/interest_rates", method = GET)
+    @RequestMapping(value = "", method = GET)
     public List<InterestRateDto> getAll() {
         return mapper.mapToDtoList(service.findAll());
     }
 
-    @RequestMapping(value = "/interest_rates/{id}", method = GET)
+    @RequestMapping(value = "/{id}", method = GET)
     public InterestRateDto get(@PathVariable Long id) throws InterestRateNotFoundException {
         return mapper.mapToDto(service.findById(id).orElseThrow(InterestRateNotFoundException::new));
     }
 
-    @RequestMapping(value = "/interest_rates/{id}", method = DELETE)
+    @RequestMapping(value = "/{id}", method = DELETE)
     public void delete(@PathVariable Long id) throws InterestRateNotFoundException {
         try {
             service.deleteById(id);
@@ -43,12 +43,12 @@ public class InterestRateController {
         }
     }
 
-    @RequestMapping(value = "/interest_rates", method = PUT)
+    @RequestMapping(value = "", method = PUT)
     public InterestRateDto update(@RequestBody InterestRateDto interestRateDto) {
         return mapper.mapToDto(service.save(mapper.mapToEntity(interestRateDto)));
     }
 
-    @RequestMapping(value = "/interest_rates", method = POST, consumes = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
     public void create(@RequestBody InterestRateDto interestRateDto) {
         service.save(mapper.mapToEntity(interestRateDto));
     }

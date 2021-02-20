@@ -22,7 +22,11 @@ public class InterestRate {
 
     private String name;
     private LocalDate date;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
     private Currency currency;
+
     private BigDecimal rate;
 
 }

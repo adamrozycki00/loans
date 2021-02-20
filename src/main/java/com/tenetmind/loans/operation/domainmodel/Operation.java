@@ -21,7 +21,11 @@ public class Operation {
     private Long id;
 
     private LocalDate date;
+
+    @ManyToOne
+    @JoinColumn(name = "loan_id")
     private Loan loan;
+
     private String type;
     private BigDecimal amount;
 

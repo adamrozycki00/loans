@@ -1,6 +1,7 @@
 package com.tenetmind.loans.installment.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.CurrencyMapper;
+import com.tenetmind.loans.loan.domainmodel.LoanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,12 +12,16 @@ import java.util.stream.Collectors;
 public class InstallmentMapper {
 
     @Autowired
+    private LoanMapper loanMapper;
+
+    @Autowired
     private CurrencyMapper currencyMapper;
 
     public Installment mapToEntity(final InstallmentDto dto) {
         return new Installment(
                 dto.getId(),
                 dto.getDate(),
+                loanMapper.mapToEntity(dto.getLoanDto()),
                 dto.getNumber(),
                 currencyMapper.mapToEntity(dto.getCurrencyDto()),
                 dto.getPrincipal(),
@@ -27,6 +32,7 @@ public class InstallmentMapper {
         return new InstallmentDto(
                 entity.getId(),
                 entity.getDate(),
+                loanMapper.mapToDto(entity.getLoan()),
                 entity.getNumber(),
                 currencyMapper.mapToDto(entity.getCurrency()),
                 entity.getPrincipal(),

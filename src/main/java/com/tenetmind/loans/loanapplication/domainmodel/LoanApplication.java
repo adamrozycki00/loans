@@ -22,11 +22,14 @@ public class LoanApplication {
     private Long id;
 
     private LocalDateTime date;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
     private Currency currency;
+
     private BigDecimal amount;
     private Integer period;
     private BigDecimal marginRate;
     private String status;
-    private Loan loan;
 
 }

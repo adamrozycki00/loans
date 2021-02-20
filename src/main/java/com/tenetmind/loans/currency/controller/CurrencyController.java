@@ -15,7 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/currencies")
 public class CurrencyController {
 
     @Autowired
@@ -24,17 +24,17 @@ public class CurrencyController {
     @Autowired
     private CurrencyMapper mapper;
 
-    @RequestMapping(value = "/operations", method = GET)
+    @RequestMapping(value = "", method = GET)
     public List<CurrencyDto> getAll() {
         return mapper.mapToDtoList(service.findAll());
     }
 
-    @RequestMapping(value = "/operations/{id}", method = GET)
+    @RequestMapping(value = "/{id}", method = GET)
     public CurrencyDto get(@PathVariable Long id) throws CurrencyNotFoundException {
         return mapper.mapToDto(service.findById(id).orElseThrow(CurrencyNotFoundException::new));
     }
 
-    @RequestMapping(value = "/operations/{id}", method = DELETE)
+    @RequestMapping(value = "/{id}", method = DELETE)
     public void delete(@PathVariable Long id) throws CurrencyNotFoundException {
         try {
             service.deleteById(id);
@@ -43,12 +43,12 @@ public class CurrencyController {
         }
     }
 
-    @RequestMapping(value = "/operations", method = PUT)
+    @RequestMapping(value = "", method = PUT)
     public CurrencyDto update(@RequestBody CurrencyDto currencyDto) {
         return mapper.mapToDto(service.save(mapper.mapToEntity(currencyDto)));
     }
 
-    @RequestMapping(value = "/operations", method = POST, consumes = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
     public void create(@RequestBody CurrencyDto currencyDto) {
         service.save(mapper.mapToEntity(currencyDto));
     }

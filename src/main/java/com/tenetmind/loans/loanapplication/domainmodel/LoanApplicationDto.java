@@ -19,6 +19,5 @@ public class LoanApplicationDto {
     private final Integer period;
     private final BigDecimal marginRate;
     private final String status;
-    private final LoanDto loanDto;
 
 }

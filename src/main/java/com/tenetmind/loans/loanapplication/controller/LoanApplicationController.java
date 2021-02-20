@@ -15,7 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/applications")
 public class LoanApplicationController {
 
     @Autowired
@@ -24,17 +24,17 @@ public class LoanApplicationController {
     @Autowired
     private LoanApplicationMapper mapper;
 
-    @RequestMapping(value = "/operations", method = GET)
+    @RequestMapping(value = "", method = GET)
     public List<LoanApplicationDto> getAll() {
         return mapper.mapToDtoList(service.findAll());
     }
 
-    @RequestMapping(value = "/operations/{id}", method = GET)
+    @RequestMapping(value = "/{id}", method = GET)
     public LoanApplicationDto get(@PathVariable Long id) throws LoanApplicationNotFoundException {
         return mapper.mapToDto(service.findById(id).orElseThrow(LoanApplicationNotFoundException::new));
     }
 
-    @RequestMapping(value = "/operations/{id}", method = DELETE)
+    @RequestMapping(value = "/{id}", method = DELETE)
     public void delete(@PathVariable Long id) throws LoanApplicationNotFoundException {
         try {
             service.deleteById(id);
@@ -43,12 +43,12 @@ public class LoanApplicationController {
         }
     }
 
-    @RequestMapping(value = "/operations", method = PUT)
+    @RequestMapping(value = "", method = PUT)
     public LoanApplicationDto update(@RequestBody LoanApplicationDto loanApplicationDto) {
         return mapper.mapToDto(service.save(mapper.mapToEntity(loanApplicationDto)));
     }
 
-    @RequestMapping(value = "/operations", method = POST, consumes = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
     public void create(@RequestBody LoanApplicationDto loanApplicationDto) {
         service.save(mapper.mapToEntity(loanApplicationDto));
     }

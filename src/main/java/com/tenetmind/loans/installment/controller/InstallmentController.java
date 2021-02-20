@@ -15,7 +15,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/installments")
 public class InstallmentController {
 
     @Autowired
@@ -24,17 +24,17 @@ public class InstallmentController {
     @Autowired
     private InstallmentMapper mapper;
 
-    @RequestMapping(value = "/interest_rates", method = GET)
+    @RequestMapping(value = "", method = GET)
     public List<InstallmentDto> getAll() {
         return mapper.mapToDtoList(service.findAll());
     }
 
-    @RequestMapping(value = "/interest_rates/{id}", method = GET)
+    @RequestMapping(value = "/{id}", method = GET)
     public InstallmentDto get(@PathVariable Long id) throws InstallmentNotFoundException {
         return mapper.mapToDto(service.findById(id).orElseThrow(InstallmentNotFoundException::new));
     }
 
-    @RequestMapping(value = "/interest_rates/{id}", method = DELETE)
+    @RequestMapping(value = "/{id}", method = DELETE)
     public void delete(@PathVariable Long id) throws InstallmentNotFoundException {
         try {
             service.deleteById(id);
@@ -43,12 +43,12 @@ public class InstallmentController {
         }
     }
 
-    @RequestMapping(value = "/interest_rates", method = PUT)
+    @RequestMapping(value = "", method = PUT)
     public InstallmentDto update(@RequestBody InstallmentDto installmentDto) {
         return mapper.mapToDto(service.save(mapper.mapToEntity(installmentDto)));
     }
 
-    @RequestMapping(value = "/interest_rates", method = POST, consumes = APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
     public void create(@RequestBody InstallmentDto installmentDto) {
         service.save(mapper.mapToEntity(installmentDto));
     }

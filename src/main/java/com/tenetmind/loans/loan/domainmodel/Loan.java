@@ -24,7 +24,11 @@ public class Loan {
     private Long id;
 
     private LocalDateTime date;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
     private Currency currency;
+
     private BigDecimal amount;
     private Integer period;
     private BigDecimal baseRate;
@@ -32,7 +36,21 @@ public class Loan {
     private BigDecimal balance;
     private Integer numberOfInstallmentsPaid;
     private String status;
+
+    @OneToMany(
+            targetEntity = Installment.class,
+            mappedBy = "loan",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     private List<Installment> schedule;
+
+    @OneToMany(
+            targetEntity = Operation.class,
+            mappedBy = "loan",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
     private List<Operation> operations;
 
 }

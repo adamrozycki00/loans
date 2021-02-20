@@ -21,7 +21,11 @@ public class CurrencyRate {
     private Long id;
 
     private LocalDate date;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
     private Currency currency;
+
     private BigDecimal rate;
 
 }
