@@ -39,4 +39,23 @@ public class CurrencyTest {
         assertEquals(1, currenciesSize);
     }
 
+    @Test
+    public void shouldUpdateCurrency() {
+        //given
+        Currency pln = new Currency("PLN");
+        service.save(pln);
+        long plnId = pln.getId();
+
+        Currency usd = new Currency(plnId, "USD");
+
+        //when
+        service.save(usd);
+        int currenciesSizeAfterSavingUsd = repository.findAll().size();
+        String updatedPlnName = repository.findById(plnId).get().getName();
+
+        //then
+        assertEquals(1, currenciesSizeAfterSavingUsd);
+        assertEquals("USD", updatedPlnName);
+    }
+
 }
