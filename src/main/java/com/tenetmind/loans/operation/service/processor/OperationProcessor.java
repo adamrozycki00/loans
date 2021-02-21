@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static java.math.BigDecimal.ROUND_HALF_EVEN;
+
 @Service
 public class OperationProcessor {
 
@@ -32,7 +34,10 @@ public class OperationProcessor {
                 loan.getAmount(), amountInPln);
         operationService.save(makingLoan);
 
-        loan.setBalance(loan.getAmount());
+        BigDecimal balanceAfterOperation = loan.getAmount();
+        balanceAfterOperation = balanceAfterOperation.setScale(2, ROUND_HALF_EVEN);
+
+        loan.setBalance(balanceAfterOperation);
         loanService.save(loan);
     }
 
@@ -49,7 +54,10 @@ public class OperationProcessor {
                 amount, amountInPln);
         operationService.save(installmentPayment);
 
-        loan.setBalance(loan.getBalance().subtract(amountInLoanCurrency));
+        BigDecimal balanceAfterOperation = loan.getBalance().subtract(amountInLoanCurrency);
+        balanceAfterOperation = balanceAfterOperation.setScale(2, ROUND_HALF_EVEN);
+
+        loan.setBalance(balanceAfterOperation);
         loanService.save(loan);
     }
 
