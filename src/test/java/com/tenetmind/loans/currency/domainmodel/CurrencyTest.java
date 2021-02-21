@@ -1,7 +1,7 @@
-package com.tenetmind.loans.customer.domainmodel;
+package com.tenetmind.loans.currency.domainmodel;
 
-import com.tenetmind.loans.customer.repository.CustomerRepository;
-import com.tenetmind.loans.customer.service.CustomerService;
+import com.tenetmind.loans.currency.repository.CurrencyRepository;
+import com.tenetmind.loans.currency.service.CurrencyService;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,13 +13,13 @@ import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CustomerTest {
+public class CurrencyTest {
 
     @Autowired
-    private CustomerRepository repository;
+    private CurrencyRepository repository;
 
     @Autowired
-    private CustomerService service;
+    private CurrencyService service;
 
     @After
     public void cleanUp() {
@@ -27,16 +27,16 @@ public class CustomerTest {
     }
 
     @Test
-    public void shouldCreateCustomer() {
+    public void shouldCreateCurrency() {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Currency pln = new Currency("PLN");
 
         //when
-        service.save(customer);
-        int customersSize = repository.findAll().size();
+        service.save(pln);
+        int currenciesSize = repository.findAll().size();
 
         //then
-        assertEquals(1, customersSize);
+        assertEquals(1, currenciesSize);
     }
 
 }

@@ -35,11 +35,11 @@ public class Installment {
     private BigDecimal interest;
 
     public Installment(LocalDate date, Loan loan, Integer number,
-                       Currency currency, BigDecimal principal, BigDecimal interest) {
+                       BigDecimal principal, BigDecimal interest) {
         this.date = date;
         this.loan = loan;
         this.number = number;
-        this.currency = currency;
+        this.currency = loan.getCurrency();
         this.principal = principal;
         this.interest = interest;
     }

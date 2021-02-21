@@ -5,6 +5,7 @@ import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.customer.domainmodel.Customer;
 import com.tenetmind.loans.customer.repository.CustomerRepository;
 import com.tenetmind.loans.loanapplication.repository.LoanApplicationRepository;
+import com.tenetmind.loans.loanapplication.service.LoanApplicationService;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +29,14 @@ public class LoanApplicationTest {
     private CurrencyRepository currencyRepository;
 
     @Autowired
-    private LoanApplicationRepository loanApplicationRepository;
+    private LoanApplicationRepository repository;
+
+    @Autowired
+    private LoanApplicationService service;
 
     @After
     public void cleanUp() {
-        loanApplicationRepository.deleteAll();
+        repository.deleteAll();
         currencyRepository.deleteAll();
         customerRepository.deleteAll();
     }
@@ -41,15 +45,17 @@ public class LoanApplicationTest {
     public void shouldCreateLoanApplication() {
         //given
         Customer customer = new Customer("John", "Smith");
+        customerRepository.save(customer);
+
         Currency pln = new Currency("PLN");
+        currencyRepository.save(pln);
+
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
                 new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
 
         //when
-        customerRepository.save(customer);
-        currencyRepository.save(pln);
-        loanApplicationRepository.save(application);
-        int applicationsSize = loanApplicationRepository.findAll().size();
+        service.save(application);
+        int applicationsSize = repository.findAll().size();
 
         //then
         assertEquals(1, applicationsSize);
@@ -59,15 +65,17 @@ public class LoanApplicationTest {
     public void shouldDeleteLoanApplicationAndNotDeleteCurrency() {
         //given
         Customer customer = new Customer("John", "Smith");
+        customerRepository.save(customer);
+
         Currency pln = new Currency("PLN");
+        currencyRepository.save(pln);
+
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
                 new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
-        customerRepository.save(customer);
-        currencyRepository.save(pln);
-        loanApplicationRepository.save(application);
+        repository.save(application);
 
         //when
-        loanApplicationRepository.deleteAll();
+        service.deleteById(application.getId());
         int currenciesSize = currencyRepository.findAll().size();
 
         //then
@@ -78,15 +86,17 @@ public class LoanApplicationTest {
     public void shouldDeleteLoanApplicationAndNotDeleteCustomer() {
         //given
         Customer customer = new Customer("John", "Smith");
+        customerRepository.save(customer);
+
         Currency pln = new Currency("PLN");
+        currencyRepository.save(pln);
+
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
                 new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
-        customerRepository.save(customer);
-        currencyRepository.save(pln);
-        loanApplicationRepository.save(application);
+        repository.save(application);
 
         //when
-        loanApplicationRepository.deleteAll();
+        service.deleteById(application.getId());
         int customersSize = customerRepository.findAll().size();
 
         //then

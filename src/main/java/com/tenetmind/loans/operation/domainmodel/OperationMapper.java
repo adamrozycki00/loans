@@ -1,5 +1,6 @@
 package com.tenetmind.loans.operation.domainmodel;
 
+import com.tenetmind.loans.currency.domainmodel.CurrencyMapper;
 import com.tenetmind.loans.loan.domainmodel.LoanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,12 +14,17 @@ public class OperationMapper {
     @Autowired
     private LoanMapper loanMapper;
 
+    @Autowired
+    private CurrencyMapper currencyMapper;
+
     public Operation mapToEntity(final OperationDto dto) {
         return new Operation(
                 dto.getDate(),
                 loanMapper.mapToEntity(dto.getLoanDto()),
                 dto.getType(),
-                dto.getAmount());
+                currencyMapper.mapToEntity(dto.getCurrencyDto()),
+                dto.getAmount(),
+                dto.getPlnAmount());
     }
 
     public OperationDto mapToDto(final Operation entity) {
@@ -27,7 +33,9 @@ public class OperationMapper {
                 entity.getDate(),
                 loanMapper.mapToDto(entity.getLoan()),
                 entity.getType(),
-                entity.getAmount());
+                currencyMapper.mapToDto(entity.getCurrency()),
+                entity.getAmount(),
+                entity.getPlnAmount());
     }
 
     public List<OperationDto> mapToDtoList(final List<Operation> operations) {

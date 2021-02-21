@@ -3,6 +3,7 @@ package com.tenetmind.loans.loan.domainmodel;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.customer.domainmodel.Customer;
 import com.tenetmind.loans.installment.domainmodel.Installment;
+import com.tenetmind.loans.loanapplication.domainmodel.LoanApplication;
 import com.tenetmind.loans.operation.domainmodel.Operation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,12 @@ public class Loan {
     private Long id;
 
     private LocalDateTime date;
+
+    @OneToOne(
+            fetch = FetchType.EAGER
+    )
+    @JoinColumn(name = "application_id")
+    private LoanApplication application;
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -57,21 +64,41 @@ public class Loan {
     )
     private List<Operation> operations;
 
-    public Loan(LocalDateTime date, Customer customer, Currency currency,
-                BigDecimal amount, Integer period, BigDecimal baseRate,
-                BigDecimal marginRate) {
+//    public Loan(LocalDateTime date, Customer customer, Currency currency,
+//                BigDecimal amount, Integer period, BigDecimal baseRate,
+//                BigDecimal marginRate) {
+//        this.date = date;
+//        this.customer = customer;
+//        this.currency = currency;
+//        this.amount = amount;
+//        this.period = period;
+//        this.baseRate = baseRate;
+//        this.marginRate = marginRate;
+//        this.balance = amount;
+//        this.numberOfInstallmentsPaid = 0;
+//        this.status = "New";
+//        this.schedule = new ArrayList<>();
+//        this.operations = new ArrayList<>();
+//    }
+
+    public Loan(LocalDateTime date, LoanApplication application, BigDecimal baseRate) {
         this.date = date;
-        this.customer = customer;
-        this.currency = currency;
-        this.amount = amount;
-        this.period = period;
+        this.application = application;
+        this.customer = application.getCustomer();
+        this.currency = application.getCurrency();
+        this.amount = application.getAmount();
+        this.period = application.getPeriod();
         this.baseRate = baseRate;
-        this.marginRate = marginRate;
+        this.marginRate = application.getMarginRate();
         this.balance = amount;
         this.numberOfInstallmentsPaid = 0;
         this.status = "New";
         this.schedule = new ArrayList<>();
         this.operations = new ArrayList<>();
+    }
+
+    public void setApplication(LoanApplication application) {
+        this.application = application;
     }
 
 }

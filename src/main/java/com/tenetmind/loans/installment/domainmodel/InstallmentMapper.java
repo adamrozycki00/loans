@@ -22,7 +22,6 @@ public class InstallmentMapper {
                 dto.getDate(),
                 loanMapper.mapToEntity(dto.getLoanDto()),
                 dto.getNumber(),
-                currencyMapper.mapToEntity(dto.getCurrencyDto()),
                 dto.getPrincipal(),
                 dto.getInterest());
     }

@@ -3,6 +3,7 @@ package com.tenetmind.loans.loan.domainmodel;
 import com.tenetmind.loans.currency.domainmodel.CurrencyMapper;
 import com.tenetmind.loans.customer.domainmodel.CustomerMapper;
 import com.tenetmind.loans.installment.domainmodel.InstallmentMapper;
+import com.tenetmind.loans.loanapplication.domainmodel.LoanApplicationMapper;
 import com.tenetmind.loans.operation.domainmodel.OperationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class LoanMapper {
+
+    @Autowired
+    private LoanApplicationMapper applicationMapper;
 
     @Autowired
     private CustomerMapper customerMapper;
@@ -28,18 +32,15 @@ public class LoanMapper {
     public Loan mapToEntity(final LoanDto dto) {
         return new Loan(
                 dto.getDate(),
-                customerMapper.mapToEntity(dto.getCustomerDto()),
-                currencyMapper.mapToEntity(dto.getCurrencyDto()),
-                dto.getAmount(),
-                dto.getPeriod(),
-                dto.getBaseRate(),
-                dto.getMarginRate());
+                applicationMapper.mapToEntity(dto.getApplicationDto()),
+                dto.getBaseRate());
     }
 
     public LoanDto mapToDto(final Loan entity) {
         return new LoanDto(
                 entity.getId(),
                 entity.getDate(),
+                applicationMapper.mapToDto(entity.getApplication()),
                 customerMapper.mapToDto(entity.getCustomer()),
                 currencyMapper.mapToDto(entity.getCurrency()),
                 entity.getAmount(),
