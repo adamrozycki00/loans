@@ -38,7 +38,7 @@ public class OperationProcessor {
 
     public void payInstallment(LocalDate date, Loan loan, Currency currency, BigDecimal amount)
             throws CurrencyConversionException, PaymentAmountException {
-        if (validatePaymentAmount(date, loan, currency, amount)) {
+        if (!validatePaymentAmount(date, loan, currency, amount)) {
             throw new PaymentAmountException();
         }
 
