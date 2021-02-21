@@ -1,11 +1,11 @@
-package com.tenetmind.loans.loanapplication.domainmodel;
+package com.tenetmind.loans.application.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.customer.domainmodel.Customer;
 import com.tenetmind.loans.customer.repository.CustomerRepository;
-import com.tenetmind.loans.loanapplication.repository.LoanApplicationRepository;
-import com.tenetmind.loans.loanapplication.service.LoanApplicationService;
+import com.tenetmind.loans.application.repository.LoanApplicationRepository;
+import com.tenetmind.loans.application.service.LoanApplicationService;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;

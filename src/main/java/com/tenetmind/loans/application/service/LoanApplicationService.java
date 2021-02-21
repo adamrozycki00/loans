@@ -1,7 +1,7 @@
-package com.tenetmind.loans.loanapplication.service;
+package com.tenetmind.loans.application.service;
 
-import com.tenetmind.loans.loanapplication.domainmodel.LoanApplication;
-import com.tenetmind.loans.loanapplication.repository.LoanApplicationRepository;
+import com.tenetmind.loans.application.domainmodel.LoanApplication;
+import com.tenetmind.loans.application.repository.LoanApplicationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

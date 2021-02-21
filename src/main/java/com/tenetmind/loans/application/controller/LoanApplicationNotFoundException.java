@@ -1,3 +1,3 @@
-package com.tenetmind.loans.loanapplication.controller;
+package com.tenetmind.loans.application.controller;
 
 public class LoanApplicationNotFoundException extends Exception {}

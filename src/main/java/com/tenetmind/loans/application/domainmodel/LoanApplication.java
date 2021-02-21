@@ -1,4 +1,4 @@
-package com.tenetmind.loans.loanapplication.domainmodel;
+package com.tenetmind.loans.application.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.customer.domainmodel.Customer;

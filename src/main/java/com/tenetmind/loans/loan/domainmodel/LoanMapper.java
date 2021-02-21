@@ -3,7 +3,7 @@ package com.tenetmind.loans.loan.domainmodel;
 import com.tenetmind.loans.currency.domainmodel.CurrencyMapper;
 import com.tenetmind.loans.customer.domainmodel.CustomerMapper;
 import com.tenetmind.loans.installment.domainmodel.InstallmentMapper;
-import com.tenetmind.loans.loanapplication.domainmodel.LoanApplicationMapper;
+import com.tenetmind.loans.application.domainmodel.LoanApplicationMapper;
 import com.tenetmind.loans.operation.domainmodel.OperationMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

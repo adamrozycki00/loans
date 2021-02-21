@@ -3,7 +3,7 @@ package com.tenetmind.loans.loan.domainmodel;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.customer.domainmodel.Customer;
 import com.tenetmind.loans.installment.domainmodel.Installment;
-import com.tenetmind.loans.loanapplication.domainmodel.LoanApplication;
+import com.tenetmind.loans.application.domainmodel.LoanApplication;
 import com.tenetmind.loans.operation.domainmodel.Operation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

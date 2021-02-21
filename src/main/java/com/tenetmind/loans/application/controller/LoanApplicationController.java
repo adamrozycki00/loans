@@ -1,8 +1,8 @@
-package com.tenetmind.loans.loanapplication.controller;
+package com.tenetmind.loans.application.controller;
 
-import com.tenetmind.loans.loanapplication.domainmodel.LoanApplicationDto;
-import com.tenetmind.loans.loanapplication.domainmodel.LoanApplicationMapper;
-import com.tenetmind.loans.loanapplication.service.LoanApplicationService;
+import com.tenetmind.loans.application.domainmodel.LoanApplicationDto;
+import com.tenetmind.loans.application.domainmodel.LoanApplicationMapper;
+import com.tenetmind.loans.application.service.LoanApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
