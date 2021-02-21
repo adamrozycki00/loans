@@ -2,6 +2,7 @@ package com.tenetmind.loans.loanapplication.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.customer.domainmodel.Customer;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "applications")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class LoanApplication {
 

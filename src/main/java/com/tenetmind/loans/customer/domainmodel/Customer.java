@@ -1,5 +1,6 @@
 package com.tenetmind.loans.customer.domainmodel;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "customers")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class Customer {
 

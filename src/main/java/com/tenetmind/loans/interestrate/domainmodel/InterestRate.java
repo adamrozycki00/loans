@@ -1,6 +1,7 @@
 package com.tenetmind.loans.interestrate.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "interest_rates")
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 public class InterestRate {
 
