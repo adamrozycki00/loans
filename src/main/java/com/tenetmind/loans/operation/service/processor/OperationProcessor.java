@@ -47,17 +47,18 @@ public class OperationProcessor {
             throw new PaymentAmountException();
         }
 
-        BigDecimal amountInPln = converter.convertToPln(amount, currency, date);
-        BigDecimal amountInLoanCurrency = converter.convert(amount, currency, loan.getCurrency(), date);
+        amount = amount.setScale(2, ROUND_HALF_EVEN);
+
+        BigDecimal amountInPln = converter.convertToPln(amount, currency, date)
+                .setScale(2, ROUND_HALF_EVEN);
+        BigDecimal amountInLoanCurrency = converter.convert(amount, currency, loan.getCurrency(), date)
+                .setScale(2, ROUND_HALF_EVEN);
 
         Operation installmentPayment = new Operation(date, loan, "Installment payment", currency,
                 amount, amountInPln);
         operationService.save(installmentPayment);
 
-        BigDecimal balanceAfterOperation = loan.getBalance().subtract(amountInLoanCurrency);
-        balanceAfterOperation = balanceAfterOperation.setScale(2, ROUND_HALF_EVEN);
-
-        loan.setBalance(balanceAfterOperation);
+        loan.setBalance(loan.getBalance().subtract(amountInLoanCurrency));
         loanService.save(loan);
     }
 
@@ -67,7 +68,9 @@ public class OperationProcessor {
             return false;
         }
 
-        BigDecimal amountInLoanCurrency = converter.convert(amount, currency, loan.getCurrency(), date);
+        BigDecimal amountInLoanCurrency =
+                converter.convert(amount.setScale(2, ROUND_HALF_EVEN), currency, loan.getCurrency(), date)
+                .setScale(2, ROUND_HALF_EVEN);
 
         return amountInLoanCurrency.compareTo(loan.getBalance()) <= 0;
     }
