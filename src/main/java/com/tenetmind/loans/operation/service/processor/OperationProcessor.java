@@ -28,9 +28,9 @@ public class OperationProcessor {
     public void makeLoan(LocalDate date, Loan loan) throws CurrencyConversionException {
         BigDecimal amountInPln = converter.convertToPln(loan.getAmount(), loan.getCurrency(), date);
 
-        Operation makingALoan = new Operation(date, loan, "Making a loan", loan.getCurrency(),
+        Operation makingLoan = new Operation(date, loan, "Making loan", loan.getCurrency(),
                 loan.getAmount(), amountInPln);
-        operationService.save(makingALoan);
+        operationService.save(makingLoan);
 
         loan.setBalance(loan.getAmount());
         loanService.save(loan);
