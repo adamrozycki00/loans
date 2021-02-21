@@ -13,11 +13,20 @@ public class InterestRateMapper {
     @Autowired
     private CurrencyMapper currencyMapper;
 
-    public InterestRate mapToEntity(final InterestRateDto dto) {
+    public InterestRate mapToNewEntity(final InterestRateDto dto) {
         return new InterestRate(
                 dto.getName(),
                 dto.getDate(),
-                currencyMapper.mapToEntity(dto.getCurrencyDto()),
+                currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
+                dto.getRate());
+    }
+
+    public InterestRate mapToExistingEntity(final InterestRateDto dto) {
+        return new InterestRate(
+                dto.getId(),
+                dto.getName(),
+                dto.getDate(),
+                currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getRate());
     }
 
@@ -38,7 +47,7 @@ public class InterestRateMapper {
 
     public List<InterestRate> mapToEntityList(final List<InterestRateDto> interestRateDtos) {
         return interestRateDtos.stream()
-                .map(this::mapToEntity)
+                .map(this::mapToNewEntity)
                 .collect(Collectors.toList());
     }
 

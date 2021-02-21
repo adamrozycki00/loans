@@ -45,12 +45,12 @@ public class InstallmentController {
 
     @RequestMapping(value = "", method = PUT)
     public InstallmentDto update(@RequestBody InstallmentDto installmentDto) {
-        return mapper.mapToDto(service.save(mapper.mapToEntity(installmentDto)));
+        return mapper.mapToDto(service.save(mapper.mapToExistingEntity(installmentDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
     public void create(@RequestBody InstallmentDto installmentDto) {
-        service.save(mapper.mapToEntity(installmentDto));
+        service.save(mapper.mapToNewEntity(installmentDto));
     }
 
 }

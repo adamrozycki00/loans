@@ -17,12 +17,23 @@ public class OperationMapper {
     @Autowired
     private CurrencyMapper currencyMapper;
 
-    public Operation mapToEntity(final OperationDto dto) {
+    public Operation mapToNewEntity(final OperationDto dto) {
         return new Operation(
                 dto.getDate(),
-                loanMapper.mapToEntity(dto.getLoanDto()),
+                loanMapper.mapToExistingEntity(dto.getLoanDto()),
                 dto.getType(),
-                currencyMapper.mapToEntity(dto.getCurrencyDto()),
+                currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
+                dto.getAmount(),
+                dto.getPlnAmount());
+    }
+
+    public Operation mapToExistingEntity(final OperationDto dto) {
+        return new Operation(
+                dto.getId(),
+                dto.getDate(),
+                loanMapper.mapToExistingEntity(dto.getLoanDto()),
+                dto.getType(),
+                currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getAmount(),
                 dto.getPlnAmount());
     }
@@ -46,7 +57,7 @@ public class OperationMapper {
 
     public List<Operation> mapToEntityList(final List<OperationDto> operationDtos) {
         return operationDtos.stream()
-                .map(this::mapToEntity)
+                .map(this::mapToExistingEntity)
                 .collect(Collectors.toList());
     }
 

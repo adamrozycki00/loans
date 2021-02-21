@@ -8,8 +8,14 @@ import java.util.stream.Collectors;
 @Component
 public class CurrencyMapper {
 
-    public Currency mapToEntity(final CurrencyDto dto) {
+    public Currency mapToNewEntity(final CurrencyDto dto) {
         return new Currency(
+                dto.getName());
+    }
+
+    public Currency mapToExistingEntity(final CurrencyDto dto) {
+        return new Currency(
+                dto.getId(),
                 dto.getName());
     }
 

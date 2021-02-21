@@ -45,12 +45,12 @@ public class CurrencyRateController {
 
     @RequestMapping(value = "", method = PUT)
     public CurrencyRateDto update(@RequestBody CurrencyRateDto currencyRateDto) {
-        return mapper.mapToDto(service.save(mapper.mapToEntity(currencyRateDto)));
+        return mapper.mapToDto(service.save(mapper.mapToExistingEntity(currencyRateDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
     public void create(@RequestBody CurrencyRateDto currencyRateDto) {
-        service.save(mapper.mapToEntity(currencyRateDto));
+        service.save(mapper.mapToNewEntity(currencyRateDto));
     }
 
 }

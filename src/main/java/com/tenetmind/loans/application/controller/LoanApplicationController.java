@@ -45,12 +45,12 @@ public class LoanApplicationController {
 
     @RequestMapping(value = "", method = PUT)
     public LoanApplicationDto update(@RequestBody LoanApplicationDto loanApplicationDto) {
-        return mapper.mapToDto(service.save(mapper.mapToEntity(loanApplicationDto)));
+        return mapper.mapToDto(service.save(mapper.mapToExistingEntity(loanApplicationDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
     public void create(@RequestBody LoanApplicationDto loanApplicationDto) {
-        service.save(mapper.mapToEntity(loanApplicationDto));
+        service.save(mapper.mapToNewEntity(loanApplicationDto));
     }
 
 }

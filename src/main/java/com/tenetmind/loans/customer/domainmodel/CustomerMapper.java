@@ -8,8 +8,15 @@ import java.util.stream.Collectors;
 @Component
 public class CustomerMapper {
 
-    public Customer mapToEntity(final CustomerDto dto) {
+    public Customer mapToNewEntity(final CustomerDto dto) {
         return new Customer(
+                dto.getFirstName(),
+                dto.getLastName());
+    }
+
+    public Customer mapToExistingEntity(final CustomerDto dto) {
+        return new Customer(
+                dto.getId(),
                 dto.getFirstName(),
                 dto.getLastName());
     }

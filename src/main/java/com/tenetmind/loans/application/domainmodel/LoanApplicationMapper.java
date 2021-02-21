@@ -17,11 +17,23 @@ public class LoanApplicationMapper {
     @Autowired
     private CurrencyMapper currencyMapper;
 
-    public LoanApplication mapToEntity(final LoanApplicationDto dto) {
+    public LoanApplication mapToNewEntity(final LoanApplicationDto dto) {
         return new LoanApplication(
                 dto.getDate(),
-                customerMapper.mapToEntity(dto.getCustomerDto()),
-                currencyMapper.mapToEntity(dto.getCurrencyDto()),
+                customerMapper.mapToExistingEntity(dto.getCustomerDto()),
+                currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
+                dto.getAmount(),
+                dto.getPeriod(),
+                dto.getMarginRate(),
+                dto.getStatus());
+    }
+
+    public LoanApplication mapToExistingEntity(final LoanApplicationDto dto) {
+        return new LoanApplication(
+                dto.getId(),
+                dto.getDate(),
+                customerMapper.mapToExistingEntity(dto.getCustomerDto()),
+                currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getAmount(),
                 dto.getPeriod(),
                 dto.getMarginRate(),

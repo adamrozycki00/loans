@@ -17,11 +17,22 @@ public class InstallmentMapper {
     @Autowired
     private CurrencyMapper currencyMapper;
 
-    public Installment mapToEntity(final InstallmentDto dto) {
+    public Installment mapToNewEntity(final InstallmentDto dto) {
         return new Installment(
                 dto.getDate(),
-                loanMapper.mapToEntity(dto.getLoanDto()),
+                loanMapper.mapToExistingEntity(dto.getLoanDto()),
                 dto.getNumber(),
+                dto.getPrincipal(),
+                dto.getInterest());
+    }
+
+    public Installment mapToExistingEntity(final InstallmentDto dto) {
+        return new Installment(
+                dto.getId(),
+                dto.getDate(),
+                loanMapper.mapToExistingEntity(dto.getLoanDto()),
+                dto.getNumber(),
+                currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getPrincipal(),
                 dto.getInterest());
     }
@@ -45,7 +56,7 @@ public class InstallmentMapper {
 
     public List<Installment> mapToEntityList(final List<InstallmentDto> installmentDtos) {
         return installmentDtos.stream()
-                .map(this::mapToEntity)
+                .map(this::mapToExistingEntity)
                 .collect(Collectors.toList());
     }
 
