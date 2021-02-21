@@ -37,17 +37,31 @@ public class OperationProcessor {
     }
 
     public void payInstallment(LocalDate date, Loan loan, Currency currency, BigDecimal amount)
-            throws CurrencyConversionException {
+            throws CurrencyConversionException, PaymentAmountException {
+        if (validatePaymentAmount(date, loan, currency, amount)) {
+            throw new PaymentAmountException();
+        }
+
         BigDecimal amountInPln = converter.convertToPln(amount, currency, date);
+        BigDecimal amountInLoanCurrency = converter.convert(amount, currency, loan.getCurrency(), date);
 
         Operation installmentPayment = new Operation(date, loan, "Installment payment", currency,
                 amount, amountInPln);
         operationService.save(installmentPayment);
 
-        BigDecimal amountInLoanCurrency = converter.convert(amount, currency, loan.getCurrency(), date);
-
         loan.setBalance(loan.getBalance().subtract(amountInLoanCurrency));
         loanService.save(loan);
+    }
+
+    private boolean validatePaymentAmount(LocalDate date, Loan loan, Currency currency, BigDecimal amount)
+            throws CurrencyConversionException {
+        if (amount.compareTo(new BigDecimal("0")) <= 0) {
+            return false;
+        }
+
+        BigDecimal amountInLoanCurrency = converter.convert(amount, currency, loan.getCurrency(), date);
+
+        return amountInLoanCurrency.compareTo(loan.getBalance()) <= 0;
     }
 
 }

@@ -6,6 +6,7 @@ import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.operation.domainmodel.Operation;
 import com.tenetmind.loans.operation.repository.OperationRepository;
 import com.tenetmind.loans.operation.service.processor.OperationProcessor;
+import com.tenetmind.loans.operation.service.processor.PaymentAmountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,7 @@ public class OperationService {
     }
 
     public void payInstallment(LocalDate date, Loan loan, Currency currency, BigDecimal amount)
-            throws CurrencyConversionException {
+            throws CurrencyConversionException, PaymentAmountException {
         processor.payInstallment(date, loan, currency, amount);
     }
 
