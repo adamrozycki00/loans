@@ -8,6 +8,7 @@ import com.tenetmind.loans.operation.domainmodel.Operation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class Loan {
 
     @Id
@@ -66,23 +68,6 @@ public class Loan {
     )
     private List<Operation> operations;
 
-//    public Loan(LocalDateTime date, Customer customer, Currency currency,
-//                BigDecimal amount, Integer period, BigDecimal baseRate,
-//                BigDecimal marginRate) {
-//        this.date = date;
-//        this.customer = customer;
-//        this.currency = currency;
-//        this.amount = amount;
-//        this.period = period;
-//        this.baseRate = baseRate;
-//        this.marginRate = marginRate;
-//        this.balance = amount;
-//        this.numberOfInstallmentsPaid = 0;
-//        this.status = "New";
-//        this.schedule = new ArrayList<>();
-//        this.operations = new ArrayList<>();
-//    }
-
     public Loan(LocalDateTime date, LoanApplication application, BigDecimal baseRate) {
         this.date = date;
         this.application = application;
@@ -92,7 +77,7 @@ public class Loan {
         this.period = application.getPeriod();
         this.baseRate = baseRate;
         this.marginRate = application.getMarginRate();
-        this.balance = amount;
+        this.balance = new BigDecimal("0.00");
         this.numberOfInstallmentsPaid = 0;
         this.status = "New";
         this.schedule = new ArrayList<>();

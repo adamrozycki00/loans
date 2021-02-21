@@ -7,6 +7,7 @@ import com.tenetmind.loans.customer.repository.CustomerRepository;
 import com.tenetmind.loans.application.repository.LoanApplicationRepository;
 import com.tenetmind.loans.application.service.LoanApplicationService;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,13 @@ public class LoanApplicationTest {
 
     @Autowired
     private LoanApplicationService service;
+
+    @Before
+    public void setUp() {
+        repository.deleteAll();
+        currencyRepository.deleteAll();
+        customerRepository.deleteAll();
+    }
 
     @After
     public void cleanUp() {

@@ -11,6 +11,7 @@ import com.tenetmind.loans.loan.repository.LoanRepository;
 import com.tenetmind.loans.application.domainmodel.LoanApplication;
 import com.tenetmind.loans.application.repository.LoanApplicationRepository;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,15 @@ public class InstallmentTest {
 
     @Autowired
     private InstallmentService service;
+
+    @Before
+    public void setUp() {
+        repository.deleteAll();
+        loanRepository.deleteAll();
+        applicationRepository.deleteAll();
+        currencyRepository.deleteAll();
+        customerRepository.deleteAll();
+    }
 
     @After
     public void cleanUp() {

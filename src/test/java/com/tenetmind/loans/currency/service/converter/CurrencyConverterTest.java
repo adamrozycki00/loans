@@ -1,7 +1,9 @@
-package com.tenetmind.loans.converter;
+package com.tenetmind.loans.currency.service.converter;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
+import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
+import com.tenetmind.loans.currency.service.converter.CurrencyConverter;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.service.CurrencyRateService;
 import org.junit.Test;
@@ -12,7 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,7 +31,7 @@ public class CurrencyConverterTest {
     private CurrencyConverter converter;
 
     @Test
-    public void shouldConvertGivenCurrencies() {
+    public void shouldConvertGivenCurrencies() throws CurrencyConversionException {
         //given
         Currency pln = new Currency("pln");
         currencyService.save(pln);
@@ -48,14 +49,14 @@ public class CurrencyConverterTest {
         currencyRateService.save(usdRate);
 
         //when
-        Optional<BigDecimal> eurToUsd =
+        BigDecimal eurToUsd =
                 converter.convert(new BigDecimal("1"), eur, usd, LocalDate.now());
-        Optional<BigDecimal> usdToEur =
+        BigDecimal usdToEur =
                 converter.convert(new BigDecimal("1"), usd, eur, LocalDate.now());
 
         //then
-        assertEquals(new BigDecimal("1.3333"), eurToUsd.get());
-        assertEquals(new BigDecimal(".7500"), usdToEur.get());
+        assertEquals(new BigDecimal("1.3333"), eurToUsd);
+        assertEquals(new BigDecimal(".7500"), usdToEur);
     }
 
 }

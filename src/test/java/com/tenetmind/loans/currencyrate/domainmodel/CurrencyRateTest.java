@@ -5,6 +5,7 @@ import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import com.tenetmind.loans.currencyrate.service.CurrencyRateService;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,12 @@ public class CurrencyRateTest {
 
     @Autowired
     private CurrencyRateService service;
+
+    @Before
+    public void setUp() {
+        repository.deleteAll();
+        currencyRepository.deleteAll();
+    }
 
     @After
     public void cleanUp() {

@@ -3,6 +3,7 @@ package com.tenetmind.loans.currency.domainmodel;
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.currency.service.CurrencyService;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,11 @@ public class CurrencyTest {
 
     @Autowired
     private CurrencyService service;
+
+    @Before
+    public void setUp() {
+        repository.deleteAll();
+    }
 
     @After
     public void cleanUp() {

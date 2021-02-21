@@ -22,6 +22,11 @@ public class CustomerTest {
     private CustomerService service;
 
     @After
+    public void setUp() {
+        repository.deleteAll();
+    }
+
+    @After
     public void cleanUp() {
         repository.deleteAll();
     }
