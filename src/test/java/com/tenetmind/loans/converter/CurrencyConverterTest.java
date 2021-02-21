@@ -30,7 +30,7 @@ public class CurrencyConverterTest {
     private CurrencyConverter converter;
 
     @Test
-    public void test() {
+    public void shouldConvertGivenCurrencies() {
         //given
         Currency pln = new Currency("pln");
         currencyService.save(pln);
