@@ -1,8 +1,13 @@
 package com.tenetmind.loans.operation.controller;
 
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
+import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
+import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.operation.domainmodel.OperationDto;
 import com.tenetmind.loans.operation.domainmodel.OperationMapper;
 import com.tenetmind.loans.operation.service.OperationService;
+import com.tenetmind.loans.operation.service.PaymentDto;
+import com.tenetmind.loans.operation.service.processor.PaymentAmountException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -53,7 +58,16 @@ public class OperationController {
         service.save(mapper.mapToNewEntity(operationDto));
     }
 
+    @RequestMapping(value = "/payments/installment", method = POST, consumes = APPLICATION_JSON_VALUE)
+    public void payInstallment(@RequestBody PaymentDto paymentDto) throws PaymentAmountException,
+            LoanNotFoundException, CurrencyNotFoundException, CurrencyConversionException {
+        service.payInstallment(paymentDto);
+    }
 
-
+    @RequestMapping(value = "/payments/loan", method = POST, consumes = APPLICATION_JSON_VALUE)
+    public void makeLoan(@RequestBody PaymentDto paymentDto) throws LoanNotFoundException,
+            CurrencyConversionException {
+        service.makeLoan(paymentDto);
+    }
 
 }

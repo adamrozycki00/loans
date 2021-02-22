@@ -50,43 +50,20 @@ public class OperationService {
         repository.deleteById(id);
     }
 
-    public void makeLoan(LocalDate date, Loan loan) throws CurrencyConversionException {
-        processor.makeLoan(date, loan);
+    public void makeLoan(PaymentDto paymentDto) throws CurrencyConversionException, LoanNotFoundException {
+        Loan loan = loanService.findById(paymentDto.getLoanId())
+                .orElseThrow(LoanNotFoundException::new);
+        processor.makeLoan(paymentDto.getDate(), loan);
     }
 
-    public void makeLoan(Long loanId) throws CurrencyConversionException, LoanNotFoundException {
-        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
-        makeLoan(LocalDate.now(), loan);
-    }
-
-    public void makeLoan(LocalDate date, Long loanId) throws CurrencyConversionException, LoanNotFoundException {
-        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
-        makeLoan(date, loan);
-    }
-
-    public void payInstallment(LocalDate date, Loan loan, Currency currency, BigDecimal amount)
-            throws CurrencyConversionException, PaymentAmountException {
-        processor.payInstallment(date, loan, currency, amount);
-    }
-
-    public void payInstallment(Long loanId, BigDecimal amount)
-            throws CurrencyConversionException, PaymentAmountException, LoanNotFoundException {
-        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
-        payInstallment(LocalDate.now(), loan, loan.getCurrency(), amount);
-    }
-
-    public void payInstallment(LocalDate date, Long loanId, BigDecimal amount)
-            throws CurrencyConversionException, PaymentAmountException, LoanNotFoundException {
-        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
-        payInstallment(date, loan, loan.getCurrency(), amount);
-    }
-
-    public void payInstallment(LocalDate date, Long loanId, String currencyName, BigDecimal amount)
-            throws CurrencyConversionException, PaymentAmountException,
-            LoanNotFoundException, CurrencyNotFoundException {
-        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
-        Currency currency = currencyService.find(currencyName).orElseThrow(CurrencyNotFoundException::new);
-        payInstallment(date, loan, currency, amount);
+    public void payInstallment(PaymentDto paymentDto)
+            throws CurrencyConversionException, PaymentAmountException, LoanNotFoundException,
+            CurrencyNotFoundException {
+        Loan loan = loanService.findById(paymentDto.getLoanId())
+                .orElseThrow(LoanNotFoundException::new);
+        Currency currency = currencyService.find(paymentDto.getCurrencyName())
+                .orElseThrow(CurrencyNotFoundException::new);
+        processor.payInstallment(paymentDto.getDate(), loan, currency, paymentDto.getAmount());
     }
 
 }
