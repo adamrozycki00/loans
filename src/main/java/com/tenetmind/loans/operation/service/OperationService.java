@@ -1,6 +1,8 @@
 package com.tenetmind.loans.operation.service;
 
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
+import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
@@ -29,6 +31,9 @@ public class OperationService {
     @Autowired
     private LoanService loanService;
 
+    @Autowired
+    private CurrencyService currencyService;
+
     public List<Operation> findAll() {
         return repository.findAll();
     }
@@ -54,6 +59,11 @@ public class OperationService {
         makeLoan(LocalDate.now(), loan);
     }
 
+    public void makeLoan(LocalDate date, Long loanId) throws CurrencyConversionException, LoanNotFoundException {
+        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
+        makeLoan(date, loan);
+    }
+
     public void payInstallment(LocalDate date, Loan loan, Currency currency, BigDecimal amount)
             throws CurrencyConversionException, PaymentAmountException {
         processor.payInstallment(date, loan, currency, amount);
@@ -63,6 +73,20 @@ public class OperationService {
             throws CurrencyConversionException, PaymentAmountException, LoanNotFoundException {
         Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
         payInstallment(LocalDate.now(), loan, loan.getCurrency(), amount);
+    }
+
+    public void payInstallment(LocalDate date, Long loanId, BigDecimal amount)
+            throws CurrencyConversionException, PaymentAmountException, LoanNotFoundException {
+        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
+        payInstallment(date, loan, loan.getCurrency(), amount);
+    }
+
+    public void payInstallment(LocalDate date, Long loanId, String currencyName, BigDecimal amount)
+            throws CurrencyConversionException, PaymentAmountException,
+            LoanNotFoundException, CurrencyNotFoundException {
+        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
+        Currency currency = currencyService.find(currencyName).orElseThrow(CurrencyNotFoundException::new);
+        payInstallment(date, loan, currency, amount);
     }
 
 }

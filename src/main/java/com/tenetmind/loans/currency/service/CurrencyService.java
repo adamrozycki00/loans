@@ -22,6 +22,10 @@ public class CurrencyService {
         return repository.findById(id);
     }
 
+    public Optional<Currency> find(String currencyName) {
+        return repository.findByName(currencyName);
+    }
+
     public Currency save(Currency currency) {
         return repository.save(currency);
     }
