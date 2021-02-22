@@ -2,7 +2,9 @@ package com.tenetmind.loans.operation.service;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
+import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
+import com.tenetmind.loans.loan.service.LoanService;
 import com.tenetmind.loans.operation.domainmodel.Operation;
 import com.tenetmind.loans.operation.repository.OperationRepository;
 import com.tenetmind.loans.operation.service.processor.OperationProcessor;
@@ -24,6 +26,9 @@ public class OperationService {
     @Autowired
     private OperationProcessor processor;
 
+    @Autowired
+    private LoanService loanService;
+
     public List<Operation> findAll() {
         return repository.findAll();
     }
@@ -44,9 +49,20 @@ public class OperationService {
         processor.makeLoan(date, loan);
     }
 
+    public void makeLoan(Long loanId) throws CurrencyConversionException, LoanNotFoundException {
+        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
+        makeLoan(LocalDate.now(), loan);
+    }
+
     public void payInstallment(LocalDate date, Loan loan, Currency currency, BigDecimal amount)
             throws CurrencyConversionException, PaymentAmountException {
         processor.payInstallment(date, loan, currency, amount);
+    }
+
+    public void payInstallment(Long loanId, BigDecimal amount)
+            throws CurrencyConversionException, PaymentAmountException, LoanNotFoundException {
+        Loan loan = loanService.findById(loanId).orElseThrow(LoanNotFoundException::new);
+        payInstallment(LocalDate.now(), loan, loan.getCurrency(), amount);
     }
 
 }
