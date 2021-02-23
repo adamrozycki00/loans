@@ -54,6 +54,10 @@ public class CurrencyConverter {
         Currency originalCurrency = currencyService.find(originalCurrencyName)
                 .orElseThrow(CurrencyNotFoundException::new);
 
+        if (originalCurrency.equals(new Currency("PLN"))) {
+            return originalAmount;
+        }
+
         Optional<CurrencyRate> originalRate = currencyRateService.getRate(date, originalCurrency);
         return originalRate
                 .map(CurrencyRate::getRate)
@@ -65,6 +69,10 @@ public class CurrencyConverter {
             throws CurrencyConversionException, CurrencyNotFoundException {
         Currency outputCurrency = currencyService.find(outputCurrencyName)
                 .orElseThrow(CurrencyNotFoundException::new);
+
+        if (outputCurrency.equals(new Currency("PLN"))) {
+            return originalAmount;
+        }
 
         Optional<CurrencyRate> outputRate = currencyRateService.getRate(date, outputCurrency);
         return outputRate

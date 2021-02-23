@@ -84,8 +84,8 @@ public class Loan {
         this.operations = new ArrayList<>();
     }
 
-    public void setApplication(LoanApplication application) {
-        this.application = application;
+    public void setStatus(String status) {
+        this.status = status.substring(0, 1).toUpperCase() + status.substring(1);
     }
 
 }

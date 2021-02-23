@@ -7,6 +7,8 @@ import com.tenetmind.loans.customer.domainmodel.Customer;
 import com.tenetmind.loans.customer.repository.CustomerRepository;
 import com.tenetmind.loans.application.repository.LoanApplicationRepository;
 import com.tenetmind.loans.application.service.LoanApplicationService;
+import com.tenetmind.loans.loan.repository.LoanRepository;
+import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,8 +38,12 @@ public class LoanApplicationTest {
     @Autowired
     private LoanApplicationService service;
 
+    @Autowired
+    private LoanRepository loanRepository;
+
     @Before
     public void setUp() {
+        loanRepository.deleteAll();
         repository.deleteAll();
         currencyRepository.deleteAll();
         customerRepository.deleteAll();
@@ -45,13 +51,14 @@ public class LoanApplicationTest {
 
     @After
     public void cleanUp() {
+        loanRepository.deleteAll();
         repository.deleteAll();
         currencyRepository.deleteAll();
         customerRepository.deleteAll();
     }
 
     @Test
-    public void shouldCreateLoanApplication() throws InvalidApplicationStatusException {
+    public void shouldCreateLoanApplication() throws InvalidApplicationStatusException, InvalidLoanStatusException {
         //given
         Customer customer = new Customer("John", "Smith");
         customerRepository.save(customer);
@@ -111,5 +118,32 @@ public class LoanApplicationTest {
         //then
         assertEquals(1, customersSize);
     }
+
+    @Test
+    public void shouldCreateLoanAfterAcceptingApplication() throws InvalidLoanStatusException,
+            InvalidApplicationStatusException {
+        //given
+        Customer customer = new Customer("John", "Smith");
+        customerRepository.save(customer);
+
+        Currency pln = new Currency("PLN");
+        currencyRepository.save(pln);
+
+        LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
+        service.save(application);
+        int loansSizeBeforeAcceptingApplication = loanRepository.findAll().size();
+
+        //when
+        application.setStatus("accepted");
+        service.save(application);
+        int loansSizeAfterAcceptingApplication = loanRepository.findAll().size();
+
+        //then
+        assertEquals(0, loansSizeBeforeAcceptingApplication);
+        assertEquals(1, loansSizeAfterAcceptingApplication);
+    }
+
+
 
 }

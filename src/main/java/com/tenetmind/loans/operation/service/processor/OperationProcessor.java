@@ -30,11 +30,7 @@ public class OperationProcessor {
     private LoanService loanService;
 
     public Operation prepareMakingLoan(PaymentDto paymentDto) throws CurrencyNotFoundException,
-            CurrencyConversionException, PaymentAmountException, LoanNotFoundException {
-        if (incorrectPaymentAmount(paymentDto)) {
-            throw new PaymentAmountException();
-        }
-
+            CurrencyConversionException, LoanNotFoundException {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
 
@@ -79,13 +75,14 @@ public class OperationProcessor {
 
     private boolean incorrectPaymentAmount(PaymentDto paymentDto)
             throws CurrencyNotFoundException, CurrencyConversionException, LoanNotFoundException {
+        Loan loan = loanService.findById(paymentDto.getLoanId())
+                .orElseThrow(LoanNotFoundException::new);
+
         if (paymentDto.getAmount().setScale(2, ROUND_HALF_EVEN).compareTo(new BigDecimal("0")) <= 0) {
             return true;
         }
 
         BigDecimal amountInLoanCurrency = getAmountInLoanCurrency(paymentDto);
-        Loan loan = loanService.findById(paymentDto.getLoanId())
-                .orElseThrow(LoanNotFoundException::new);
 
         return amountInLoanCurrency.compareTo(loan.getBalance()) > 0;
     }

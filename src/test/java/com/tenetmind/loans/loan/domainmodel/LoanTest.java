@@ -1,5 +1,7 @@
 package com.tenetmind.loans.loan.domainmodel;
 
+import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
+import com.tenetmind.loans.application.service.LoanApplicationService;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.customer.domainmodel.Customer;
@@ -39,6 +41,9 @@ public class LoanTest {
     private LoanRepository repository;
 
     @Autowired
+    private LoanApplicationService applicationService;
+
+    @Autowired
     private LoanService service;
 
     @Before
@@ -58,7 +63,7 @@ public class LoanTest {
     }
 
     @Test
-    public void shouldCreateLoan() throws InvalidLoanStatusException {
+    public void shouldCreateLoan() throws InvalidLoanStatusException, InvalidApplicationStatusException {
         //given
         Customer customer = new Customer("John", "Smith");
         customerRepository.save(customer);
@@ -68,7 +73,7 @@ public class LoanTest {
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
                 new BigDecimal("1000"), 12, new BigDecimal(".05"));
-        applicationRepository.save(application);
+        applicationService.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
 
@@ -81,7 +86,7 @@ public class LoanTest {
     }
 
     @Test
-    public void shouldDeleteLoanAndNotDeleteCustomer() {
+    public void shouldDeleteLoanAndNotDeleteCustomer() throws InvalidLoanStatusException, InvalidApplicationStatusException {
         //given
         Customer customer = new Customer("John", "Smith");
         customerRepository.save(customer);
@@ -91,7 +96,7 @@ public class LoanTest {
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
                 new BigDecimal("1000"), 12, new BigDecimal(".05"));
-        applicationRepository.save(application);
+        applicationService.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
         repository.save(loan);
@@ -107,7 +112,7 @@ public class LoanTest {
     }
 
     @Test
-    public void shouldDeleteLoanAndNotDeleteCurrency() {
+    public void shouldDeleteLoanAndNotDeleteCurrency() throws InvalidLoanStatusException, InvalidApplicationStatusException {
         //given
         Customer customer = new Customer("John", "Smith");
         customerRepository.save(customer);
@@ -117,7 +122,7 @@ public class LoanTest {
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
                 new BigDecimal("1000"), 12, new BigDecimal(".05"));
-        applicationRepository.save(application);
+        applicationService.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
         repository.save(loan);
@@ -151,11 +156,13 @@ public class LoanTest {
         //when
         service.deleteById(loan.getId());
         int loansSize = repository.findAll().size();
-        int applicationsSize = applicationRepository.findAll().size();
+        int applicationsSize = applicationService.findAll().size();
 
         //then
         assertEquals(0, loansSize);
         assertEquals(1, applicationsSize);
     }
+
+
 
 }

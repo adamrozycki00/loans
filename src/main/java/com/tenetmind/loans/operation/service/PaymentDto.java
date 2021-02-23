@@ -15,4 +15,11 @@ public class PaymentDto {
     private final String currencyName;
     private final BigDecimal amount;
 
+    public PaymentDto(LocalDate date, Long loanId) {
+        this.date = date;
+        this.loanId = loanId;
+        this.currencyName = "";
+        this.amount = BigDecimal.ZERO;
+    }
+
 }

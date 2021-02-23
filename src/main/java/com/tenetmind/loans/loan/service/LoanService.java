@@ -1,5 +1,6 @@
 package com.tenetmind.loans.loan.service;
 
+import com.tenetmind.loans.application.domainmodel.LoanApplication;
 import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.loan.repository.LoanRepository;
@@ -27,6 +28,10 @@ public class LoanService {
 
     public Optional<Loan> findById(Long id) {
         return repository.findById(id);
+    }
+
+    public Optional<Loan> find(LoanApplication application) {
+        return repository.findByApplication(application);
     }
 
     public Loan save(Loan loan) throws InvalidLoanStatusException {

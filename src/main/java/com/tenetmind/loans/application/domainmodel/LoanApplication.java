@@ -50,4 +50,8 @@ public class LoanApplication {
         this.status = "New";
     }
 
+    public void setStatus(String status) {
+        this.status = status.substring(0, 1).toUpperCase() + status.substring(1);
+    }
+
 }

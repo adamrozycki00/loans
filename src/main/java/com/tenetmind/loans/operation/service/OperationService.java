@@ -57,6 +57,7 @@ public class OperationService {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
         loan.setBalance(loan.getAmount());
+        loan.setStatus("Active");
         loanService.save(loan);
     }
 
