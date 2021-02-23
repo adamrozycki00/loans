@@ -5,6 +5,7 @@ import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.customer.domainmodel.Customer;
 import com.tenetmind.loans.customer.repository.CustomerRepository;
 import com.tenetmind.loans.loan.repository.LoanRepository;
+import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
 import com.tenetmind.loans.loan.service.LoanService;
 import com.tenetmind.loans.application.domainmodel.LoanApplication;
 import com.tenetmind.loans.application.repository.LoanApplicationRepository;
@@ -57,7 +58,7 @@ public class LoanTest {
     }
 
     @Test
-    public void shouldCreateLoan() {
+    public void shouldCreateLoan() throws InvalidLoanStatusException {
         //given
         Customer customer = new Customer("John", "Smith");
         customerRepository.save(customer);
@@ -66,7 +67,7 @@ public class LoanTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         applicationRepository.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
@@ -89,7 +90,7 @@ public class LoanTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         applicationRepository.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
@@ -115,7 +116,7 @@ public class LoanTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         applicationRepository.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
@@ -141,7 +142,7 @@ public class LoanTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         applicationRepository.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));

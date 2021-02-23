@@ -74,7 +74,7 @@ public class InstallmentTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         applicationRepository.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
@@ -101,7 +101,7 @@ public class InstallmentTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         applicationRepository.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
@@ -131,7 +131,7 @@ public class InstallmentTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         applicationRepository.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
@@ -161,7 +161,7 @@ public class InstallmentTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         applicationRepository.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
@@ -191,7 +191,7 @@ public class InstallmentTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         applicationRepository.save(application);
 
         Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));

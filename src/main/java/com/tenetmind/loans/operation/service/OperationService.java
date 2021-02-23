@@ -6,6 +6,7 @@ import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
+import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
 import com.tenetmind.loans.loan.service.LoanService;
 import com.tenetmind.loans.operation.domainmodel.Operation;
 import com.tenetmind.loans.operation.repository.OperationRepository;
@@ -49,8 +50,8 @@ public class OperationService {
         repository.deleteById(id);
     }
 
-    public void makeLoan(PaymentDto paymentDto) throws CurrencyNotFoundException,
-            CurrencyConversionException, LoanNotFoundException, PaymentAmountException {
+    public void makeLoan(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyConversionException,
+            LoanNotFoundException, PaymentAmountException, InvalidLoanStatusException {
         save(processor.prepareMakingLoan(paymentDto));
 
         Loan loan = loanService.findById(paymentDto.getLoanId())
@@ -59,8 +60,8 @@ public class OperationService {
         loanService.save(loan);
     }
 
-    public void payInstallment(PaymentDto paymentDto) throws CurrencyNotFoundException,
-            CurrencyConversionException, PaymentAmountException, LoanNotFoundException {
+    public void payInstallment(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyConversionException,
+            PaymentAmountException, LoanNotFoundException, InvalidLoanStatusException {
         save(processor.prepareInstallmentPayment(paymentDto));
 
         Loan loan = loanService.findById(paymentDto.getLoanId())

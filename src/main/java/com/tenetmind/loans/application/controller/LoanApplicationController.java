@@ -2,6 +2,7 @@ package com.tenetmind.loans.application.controller;
 
 import com.tenetmind.loans.application.domainmodel.LoanApplicationDto;
 import com.tenetmind.loans.application.domainmodel.LoanApplicationMapper;
+import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
 import com.tenetmind.loans.application.service.LoanApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,12 +45,14 @@ public class LoanApplicationController {
     }
 
     @RequestMapping(value = "", method = PUT)
-    public LoanApplicationDto update(@RequestBody LoanApplicationDto loanApplicationDto) {
+    public LoanApplicationDto update(@RequestBody LoanApplicationDto loanApplicationDto)
+            throws InvalidApplicationStatusException {
         return mapper.mapToDto(service.save(mapper.mapToExistingEntity(loanApplicationDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void create(@RequestBody LoanApplicationDto loanApplicationDto) {
+    public void create(@RequestBody LoanApplicationDto loanApplicationDto)
+            throws InvalidApplicationStatusException {
         service.save(mapper.mapToNewEntity(loanApplicationDto));
     }
 

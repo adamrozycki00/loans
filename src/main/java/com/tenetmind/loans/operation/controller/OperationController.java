@@ -3,6 +3,7 @@ package com.tenetmind.loans.operation.controller;
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
+import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
 import com.tenetmind.loans.operation.domainmodel.OperationDto;
 import com.tenetmind.loans.operation.domainmodel.OperationMapper;
 import com.tenetmind.loans.operation.service.OperationService;
@@ -59,14 +60,14 @@ public class OperationController {
     }
 
     @RequestMapping(value = "/payments/installment", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void payInstallment(@RequestBody PaymentDto paymentDto) throws PaymentAmountException,
-            LoanNotFoundException, CurrencyNotFoundException, CurrencyConversionException {
+    public void payInstallment(@RequestBody PaymentDto paymentDto) throws PaymentAmountException, LoanNotFoundException,
+            CurrencyNotFoundException, CurrencyConversionException, InvalidLoanStatusException {
         service.payInstallment(paymentDto);
     }
 
     @RequestMapping(value = "/payments/loan", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void makeLoan(@RequestBody PaymentDto paymentDto) throws LoanNotFoundException,
-            CurrencyConversionException, CurrencyNotFoundException, PaymentAmountException {
+    public void makeLoan(@RequestBody PaymentDto paymentDto) throws LoanNotFoundException, CurrencyConversionException,
+            CurrencyNotFoundException, PaymentAmountException, InvalidLoanStatusException {
         service.makeLoan(paymentDto);
     }
 

@@ -24,8 +24,7 @@ public class LoanApplicationMapper {
                 currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getAmount(),
                 dto.getPeriod(),
-                dto.getMarginRate(),
-                dto.getStatus());
+                dto.getMarginRate());
     }
 
     public LoanApplication mapToExistingEntity(final LoanApplicationDto dto) {

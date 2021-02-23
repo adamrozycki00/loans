@@ -10,6 +10,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Entity
 @Table(name = "applications")
@@ -39,15 +40,14 @@ public class LoanApplication {
     private String status;
 
     public LoanApplication(LocalDateTime date, Customer customer, Currency currency,
-                           BigDecimal amount, Integer period, BigDecimal marginRate,
-                           String status) {
+                           BigDecimal amount, Integer period, BigDecimal marginRate) {
         this.date = date;
         this.customer = customer;
         this.currency = currency;
         this.amount = amount;
         this.period = period;
         this.marginRate = marginRate;
-        this.status = status;
+        this.status = "New";
     }
 
 }

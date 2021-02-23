@@ -1,5 +1,6 @@
 package com.tenetmind.loans.application.domainmodel;
 
+import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.customer.domainmodel.Customer;
@@ -50,7 +51,7 @@ public class LoanApplicationTest {
     }
 
     @Test
-    public void shouldCreateLoanApplication() {
+    public void shouldCreateLoanApplication() throws InvalidApplicationStatusException {
         //given
         Customer customer = new Customer("John", "Smith");
         customerRepository.save(customer);
@@ -59,7 +60,7 @@ public class LoanApplicationTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
 
         //when
         service.save(application);
@@ -79,7 +80,7 @@ public class LoanApplicationTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         repository.save(application);
 
         //when
@@ -100,7 +101,7 @@ public class LoanApplicationTest {
         currencyRepository.save(pln);
 
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"), "New");
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
         repository.save(application);
 
         //when
