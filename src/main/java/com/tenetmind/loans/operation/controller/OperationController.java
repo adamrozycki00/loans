@@ -66,7 +66,7 @@ public class OperationController {
 
     @RequestMapping(value = "/payments/loan", method = POST, consumes = APPLICATION_JSON_VALUE)
     public void makeLoan(@RequestBody PaymentDto paymentDto) throws LoanNotFoundException,
-            CurrencyConversionException {
+            CurrencyConversionException, CurrencyNotFoundException, PaymentAmountException {
         service.makeLoan(paymentDto);
     }
 

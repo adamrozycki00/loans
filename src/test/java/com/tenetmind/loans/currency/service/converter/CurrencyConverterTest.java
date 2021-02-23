@@ -1,5 +1,6 @@
 package com.tenetmind.loans.currency.service.converter;
 
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
@@ -31,7 +32,7 @@ public class CurrencyConverterTest {
     private CurrencyConverter converter;
 
     @Test
-    public void shouldConvertGivenCurrencies() throws CurrencyConversionException {
+    public void shouldConvertGivenCurrencies() throws CurrencyConversionException, CurrencyNotFoundException {
         //given
         Currency pln = new Currency("pln");
         currencyService.save(pln);
@@ -50,9 +51,9 @@ public class CurrencyConverterTest {
 
         //when
         BigDecimal eurToUsd =
-                converter.convert(new BigDecimal("1"), eur, usd, LocalDate.now());
+                converter.convert(new BigDecimal("1"), "eur", "usd", LocalDate.now());
         BigDecimal usdToEur =
-                converter.convert(new BigDecimal("1"), usd, eur, LocalDate.now());
+                converter.convert(new BigDecimal("1"), "usd", "eur", LocalDate.now());
 
         //then
         assertEquals(new BigDecimal("1.3333"), eurToUsd);

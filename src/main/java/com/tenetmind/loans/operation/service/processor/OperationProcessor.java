@@ -1,17 +1,19 @@
 package com.tenetmind.loans.operation.service.processor;
 
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
+import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
 import com.tenetmind.loans.currency.service.converter.CurrencyConverter;
+import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.loan.service.LoanService;
 import com.tenetmind.loans.operation.domainmodel.Operation;
-import com.tenetmind.loans.operation.service.OperationService;
+import com.tenetmind.loans.operation.service.PaymentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 import static java.math.BigDecimal.ROUND_HALF_EVEN;
 
@@ -22,57 +24,70 @@ public class OperationProcessor {
     private CurrencyConverter converter;
 
     @Autowired
-    private LoanService loanService;
+    private CurrencyService currencyService;
 
     @Autowired
-    private OperationService operationService;
+    private LoanService loanService;
 
-    public void makeLoan(LocalDate date, Loan loan) throws CurrencyConversionException {
-        BigDecimal amountInPln = converter.convertToPln(loan.getAmount(), loan.getCurrency(), date);
-
-        Operation makingLoan = new Operation(date, loan, "Making loan", loan.getCurrency(),
-                loan.getAmount(), amountInPln);
-        operationService.save(makingLoan);
-
-        BigDecimal balanceAfterOperation = loan.getAmount();
-        balanceAfterOperation = balanceAfterOperation.setScale(2, ROUND_HALF_EVEN);
-
-        loan.setBalance(balanceAfterOperation);
-        loanService.save(loan);
-    }
-
-    public void payInstallment(LocalDate date, Loan loan, Currency currency, BigDecimal amount)
-            throws CurrencyConversionException, PaymentAmountException {
-        if (!validatePaymentAmount(date, loan, currency, amount)) {
+    public Operation prepareMakingLoan(PaymentDto paymentDto) throws CurrencyNotFoundException,
+            CurrencyConversionException, PaymentAmountException, LoanNotFoundException {
+        if (incorrectPaymentAmount(paymentDto)) {
             throw new PaymentAmountException();
         }
 
-        amount = amount.setScale(2, ROUND_HALF_EVEN);
+        Loan loan = loanService.findById(paymentDto.getLoanId())
+                .orElseThrow(LoanNotFoundException::new);
 
-        BigDecimal amountInPln = converter.convertToPln(amount, currency, date)
+        BigDecimal amountInPln =
+                converter.convertToPln(loan.getAmount(), loan.getCurrency().getName(), paymentDto.getDate())
                 .setScale(2, ROUND_HALF_EVEN);
-        BigDecimal amountInLoanCurrency = converter.convert(amount, currency, loan.getCurrency(), date)
-                .setScale(2, ROUND_HALF_EVEN);
 
-        Operation installmentPayment = new Operation(date, loan, "Installment payment", currency,
-                amount, amountInPln);
-        operationService.save(installmentPayment);
-
-        loan.setBalance(loan.getBalance().subtract(amountInLoanCurrency));
-        loanService.save(loan);
+        return new Operation(paymentDto.getDate(), loan, "Making loan", loan.getCurrency(),
+                loan.getAmount(), amountInPln);
     }
 
-    private boolean validatePaymentAmount(LocalDate date, Loan loan, Currency currency, BigDecimal amount)
-            throws CurrencyConversionException {
-        if (amount.compareTo(new BigDecimal("0")) <= 0) {
-            return false;
+    public Operation prepareInstallmentPayment(PaymentDto paymentDto)
+            throws CurrencyNotFoundException, CurrencyConversionException,
+            PaymentAmountException, LoanNotFoundException {
+        if (incorrectPaymentAmount(paymentDto)) {
+            throw new PaymentAmountException();
         }
 
-        BigDecimal amountInLoanCurrency =
-                converter.convert(amount.setScale(2, ROUND_HALF_EVEN), currency, loan.getCurrency(), date)
+        BigDecimal amount = paymentDto.getAmount().setScale(2, ROUND_HALF_EVEN);
+
+        BigDecimal amountInPln = converter.convertToPln(amount, paymentDto.getCurrencyName(), paymentDto.getDate())
                 .setScale(2, ROUND_HALF_EVEN);
 
-        return amountInLoanCurrency.compareTo(loan.getBalance()) <= 0;
+        Loan loan = loanService.findById(paymentDto.getLoanId())
+                .orElseThrow(LoanNotFoundException::new);
+
+        Currency currency = currencyService.find(paymentDto.getCurrencyName())
+                .orElseThrow(CurrencyNotFoundException::new);
+
+        return new Operation(paymentDto.getDate(), loan, "Installment payment", currency, amount, amountInPln);
+    }
+
+    public BigDecimal getAmountInLoanCurrency(PaymentDto paymentDto)
+            throws CurrencyNotFoundException, CurrencyConversionException, LoanNotFoundException {
+        Loan loan = loanService.findById(paymentDto.getLoanId())
+                .orElseThrow(LoanNotFoundException::new);
+
+        return converter.convert(paymentDto.getAmount().setScale(2, ROUND_HALF_EVEN), paymentDto.getCurrencyName(),
+                loan.getCurrency().getName(), paymentDto.getDate())
+                .setScale(2, ROUND_HALF_EVEN);
+    }
+
+    private boolean incorrectPaymentAmount(PaymentDto paymentDto)
+            throws CurrencyNotFoundException, CurrencyConversionException, LoanNotFoundException {
+        if (paymentDto.getAmount().setScale(2, ROUND_HALF_EVEN).compareTo(new BigDecimal("0")) <= 0) {
+            return true;
+        }
+
+        BigDecimal amountInLoanCurrency = getAmountInLoanCurrency(paymentDto);
+        Loan loan = loanService.findById(paymentDto.getLoanId())
+                .orElseThrow(LoanNotFoundException::new);
+
+        return amountInLoanCurrency.compareTo(loan.getBalance()) > 0;
     }
 
 }

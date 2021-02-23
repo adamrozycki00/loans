@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,20 +49,25 @@ public class OperationService {
         repository.deleteById(id);
     }
 
-    public void makeLoan(PaymentDto paymentDto) throws CurrencyConversionException, LoanNotFoundException {
+    public void makeLoan(PaymentDto paymentDto) throws CurrencyNotFoundException,
+            CurrencyConversionException, LoanNotFoundException, PaymentAmountException {
+        save(processor.prepareMakingLoan(paymentDto));
+
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
-        processor.makeLoan(paymentDto.getDate(), loan);
+        loan.setBalance(loan.getAmount());
+        loanService.save(loan);
     }
 
-    public void payInstallment(PaymentDto paymentDto)
-            throws CurrencyConversionException, PaymentAmountException, LoanNotFoundException,
-            CurrencyNotFoundException {
+    public void payInstallment(PaymentDto paymentDto) throws CurrencyNotFoundException,
+            CurrencyConversionException, PaymentAmountException, LoanNotFoundException {
+        save(processor.prepareInstallmentPayment(paymentDto));
+
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
-        Currency currency = currencyService.find(paymentDto.getCurrencyName())
-                .orElseThrow(CurrencyNotFoundException::new);
-        processor.payInstallment(paymentDto.getDate(), loan, currency, paymentDto.getAmount());
+        BigDecimal amountInLoanCurrency = processor.getAmountInLoanCurrency(paymentDto);
+        loan.setBalance(loan.getBalance().subtract(amountInLoanCurrency));
+        loanService.save(loan);
     }
 
 }

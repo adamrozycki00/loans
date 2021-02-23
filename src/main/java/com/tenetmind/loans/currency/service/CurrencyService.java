@@ -23,7 +23,7 @@ public class CurrencyService {
     }
 
     public Optional<Currency> find(String currencyName) {
-        return repository.findByName(currencyName);
+        return repository.findByName(currencyName.toUpperCase());
     }
 
     public Currency save(Currency currency) {
