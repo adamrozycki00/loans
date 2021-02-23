@@ -8,6 +8,8 @@ import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
 import com.tenetmind.loans.customer.domainmodel.Customer;
 import com.tenetmind.loans.customer.repository.CustomerRepository;
+import com.tenetmind.loans.installment.repository.InstallmentRepository;
+import com.tenetmind.loans.installment.service.InstallmentService;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.loan.repository.LoanRepository;
@@ -61,9 +63,13 @@ public class OperationTest {
     @Autowired
     private OperationService service;
 
+    @Autowired
+    private InstallmentRepository installmentRepository;
+
     @Before
     public void setUp() {
         repository.deleteAll();
+        installmentRepository.deleteAll();
         loanRepository.deleteAll();
         applicationRepository.deleteAll();
         currencyRepository.deleteAll();
@@ -73,6 +79,7 @@ public class OperationTest {
     @After
     public void cleanUp() {
         repository.deleteAll();
+        installmentRepository.deleteAll();
         loanRepository.deleteAll();
         applicationRepository.deleteAll();
         currencyRepository.deleteAll();
@@ -167,7 +174,9 @@ public class OperationTest {
     }
 
     @Test
-    public void shouldChangeLoanBalanceAfterMakingLoan() throws InvalidLoanStatusException, InvalidApplicationStatusException, PaymentAmountException, LoanNotFoundException, CurrencyNotFoundException, CurrencyConversionException {
+    public void shouldChangeLoanBalanceAfterMakingLoan() throws InvalidLoanStatusException,
+            InvalidApplicationStatusException, LoanNotFoundException, CurrencyNotFoundException,
+            CurrencyConversionException {
         //given
         Customer customer = new Customer("John", "Smith");
         customerRepository.save(customer);
@@ -181,6 +190,7 @@ public class OperationTest {
         applicationService.save(application);
 
         Loan createdLoan = loanService.find(application).get();
+
         double balanceBeforeMakingLoan = createdLoan.getBalance().doubleValue();
         PaymentDto paymentDto = new PaymentDto(LocalDate.now(), createdLoan.getId());
 
@@ -196,8 +206,8 @@ public class OperationTest {
 
     @Test
     public void shouldChangeLoanStatusAfterMakingLoan() throws InvalidLoanStatusException,
-            InvalidApplicationStatusException, PaymentAmountException, LoanNotFoundException,
-            CurrencyNotFoundException, CurrencyConversionException {
+            InvalidApplicationStatusException, LoanNotFoundException, CurrencyNotFoundException,
+            CurrencyConversionException {
         //given
         Customer customer = new Customer("John", "Smith");
         customerRepository.save(customer);

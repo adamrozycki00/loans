@@ -55,7 +55,7 @@ public class Loan {
     @OneToMany(
             targetEntity = Installment.class,
             mappedBy = "loan",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.PERSIST,
             fetch = FetchType.LAZY
     )
     private List<Installment> schedule;
@@ -63,7 +63,7 @@ public class Loan {
     @OneToMany(
             targetEntity = Operation.class,
             mappedBy = "loan",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.PERSIST,
             fetch = FetchType.LAZY
     )
     private List<Operation> operations;

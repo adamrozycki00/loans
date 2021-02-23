@@ -48,4 +48,17 @@ public class Installment {
         this.interest = interest;
     }
 
+    @Override
+    public String toString() {
+        return " {" +
+                "id=" + id +
+                ", date=" + date +
+                ", loan=" + loan +
+                ", number=" + number +
+                ", currency=" + currency +
+                ", principal=" + principal +
+                ", interest=" + interest +
+                '}';
+    }
+
 }
