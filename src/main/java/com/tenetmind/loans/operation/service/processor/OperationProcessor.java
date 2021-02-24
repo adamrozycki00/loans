@@ -36,7 +36,7 @@ public class OperationProcessor {
 
         BigDecimal amountInPln =
                 converter.convertToPln(loan.getAmount(), loan.getCurrency().getName(), paymentDto.getDate())
-                .setScale(2, ROUND_HALF_EVEN);
+                        .setScale(2, ROUND_HALF_EVEN);
 
         return new Operation(paymentDto.getDate(), loan, "Making loan", loan.getCurrency(),
                 loan.getAmount(), amountInPln);
@@ -73,18 +73,11 @@ public class OperationProcessor {
                 .setScale(2, ROUND_HALF_EVEN);
     }
 
-    private boolean incorrectPaymentAmount(PaymentDto paymentDto)
-            throws CurrencyNotFoundException, CurrencyConversionException, LoanNotFoundException {
+    private boolean incorrectPaymentAmount(PaymentDto paymentDto) throws LoanNotFoundException {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
 
-        if (paymentDto.getAmount().setScale(2, ROUND_HALF_EVEN).compareTo(new BigDecimal("0")) <= 0) {
-            return true;
-        }
-
-        BigDecimal amountInLoanCurrency = getAmountInLoanCurrency(paymentDto);
-
-        return amountInLoanCurrency.compareTo(loan.getBalance()) > 0;
+        return paymentDto.getAmount().setScale(2, ROUND_HALF_EVEN).compareTo(new BigDecimal("0")) <= 0;
     }
 
 }
