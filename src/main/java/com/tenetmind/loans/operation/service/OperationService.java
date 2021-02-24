@@ -63,6 +63,9 @@ public class OperationService {
 
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
+        int numberOfInstallmentsPaid = loan.getNumberOfInstallmentsPaid();
+
+
         loan.setBalance(loan.getAmount());
         loan.setStatus("Active");
         loanService.save(loan);
@@ -71,7 +74,7 @@ public class OperationService {
 
         loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
-        loan.setAmountToPay(installmentService.getInitialAmountToPay(loan));
+        loan.setAmountToPay(processor.getInitialAmountToPay(loan));
         loanService.save(loan);
     }
 
@@ -83,6 +86,7 @@ public class OperationService {
                 .orElseThrow(LoanNotFoundException::new);
         BigDecimal amountInLoanCurrency = processor.getAmountInLoanCurrency(paymentDto);
         loan.setBalance(loan.getBalance().subtract(amountInLoanCurrency));
+        loan.setAmountToPay(processor.getAmountToPayLeftAfterPayment(paymentDto));
         loanService.save(loan);
     }
 

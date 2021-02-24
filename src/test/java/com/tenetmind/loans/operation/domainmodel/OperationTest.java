@@ -262,10 +262,44 @@ public class OperationTest {
         service.payInstallment(installmentPaymentDto);
         Loan paidLoan = loanService.find(application).get();
         double balanceAfterPayingInstallment = paidLoan.getBalance().doubleValue();
+        double changeInBalance = balanceBeforePayingInstallment - balanceAfterPayingInstallment;
 
         //then
-        assertEquals(1000, balanceBeforePayingInstallment, .001);
-        assertEquals(900, balanceAfterPayingInstallment, .001);
+        assertEquals(1000 / 12d, changeInBalance, .01);
+    }
+
+    @Test
+    public void shouldChangeLoanAmountToPayAfterPayingInstallment() throws InvalidLoanStatusException,
+            InvalidApplicationStatusException, PaymentAmountException, LoanNotFoundException,
+            CurrencyNotFoundException, CurrencyConversionException {
+        //given
+        Customer customer = new Customer("John", "Smith");
+        customerRepository.save(customer);
+
+        Currency pln = new Currency("PLN");
+        currencyRepository.save(pln);
+
+        LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
+                new BigDecimal("1000"), 12, new BigDecimal(".05"));
+        application.setStatus("accepted");
+        applicationService.save(application);
+
+        Loan createdLoan = loanService.find(application).get();
+        PaymentDto initialPaymentDto = new PaymentDto(LocalDate.now(), createdLoan.getId());
+        service.makeLoan(initialPaymentDto);
+        Loan madeLoan = loanService.find(application).get();
+        double amountToPayBeforePayingInstallment = madeLoan.getAmountToPay().doubleValue();
+
+        //when
+        PaymentDto installmentPaymentDto = new PaymentDto(LocalDate.now(), madeLoan.getId(),
+                "PLN", new BigDecimal("100.00"));
+        service.payInstallment(installmentPaymentDto);
+        Loan paidLoan = loanService.find(application).get();
+        double amountToPayAfterPayingInstallment = paidLoan.getAmountToPay().doubleValue();
+        double changeInAmountToPay = amountToPayBeforePayingInstallment - amountToPayAfterPayingInstallment;
+
+        //then
+        assertEquals(100, changeInAmountToPay, .01);
     }
 
 }

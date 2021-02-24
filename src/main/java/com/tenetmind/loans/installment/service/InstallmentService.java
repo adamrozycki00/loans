@@ -3,7 +3,10 @@ package com.tenetmind.loans.installment.service;
 import com.tenetmind.loans.installment.domainmodel.Installment;
 import com.tenetmind.loans.installment.repository.InstallmentRepository;
 import com.tenetmind.loans.installment.service.interestcalc.InterestCalc;
+import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
+import com.tenetmind.loans.loan.service.LoanService;
+import com.tenetmind.loans.operation.service.PaymentDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,16 +55,5 @@ public class InstallmentService {
         }
     }
 
-    public BigDecimal getInitialAmountToPay(Loan loan) {
-        return loan.getSchedule().stream()
-                .map(installment -> installment.getPrincipal().add(installment.getInterest()))
-                .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-    }
-
-    public BigDecimal getAmountToPayLeftAfterPayment(Loan loan) {
-        return loan.getSchedule().stream()
-                .map(installment -> installment.getPrincipal().add(installment.getInterest()))
-                .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
-    }
 
 }
