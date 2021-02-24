@@ -26,6 +26,7 @@ public class LoanDto {
     private final BigDecimal baseRate;
     private final BigDecimal marginRate;
     private final BigDecimal balance;
+    private final BigDecimal amountToPay;
     private final Integer numberOfInstallmentsPaid;
     private final String status;
     private final List<InstallmentDto> scheduleDto;

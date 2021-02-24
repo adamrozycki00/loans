@@ -49,14 +49,15 @@ public class Loan {
     private BigDecimal baseRate;
     private BigDecimal marginRate;
     private BigDecimal balance;
+    private BigDecimal amountToPay;
     private Integer numberOfInstallmentsPaid;
     private String status;
 
     @OneToMany(
             targetEntity = Installment.class,
             mappedBy = "loan",
-            cascade = CascadeType.PERSIST,
-            fetch = FetchType.LAZY
+            cascade = CascadeType.ALL,
+            fetch = FetchType.EAGER
     )
     private List<Installment> schedule;
 
@@ -77,7 +78,8 @@ public class Loan {
         this.period = application.getPeriod();
         this.baseRate = baseRate;
         this.marginRate = application.getMarginRate();
-        this.balance = new BigDecimal("0.00");
+        this.balance = BigDecimal.ZERO;
+        this.amountToPay = BigDecimal.ZERO;
         this.numberOfInstallmentsPaid = 0;
         this.status = "New";
         this.schedule = new ArrayList<>();

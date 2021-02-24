@@ -34,13 +34,10 @@ public class InstallmentService {
         repository.deleteById(id);
     }
 
-
-    public void makeSchedule(Loan loan, InterestCalc interestCalc) {
+    public void makeInitialSchedule(Loan loan, InterestCalc interestCalc) {
         int loanPeriod = loan.getPeriod();
         BigDecimal loanBalance = loan.getAmount();
         BigDecimal interestRate = loan.getBaseRate().add(loan.getMarginRate());
-        System.out.println("loanBalance: " + loanBalance);
-        System.out.println("interestRate: " + interestRate);
 
         for (int numberOfInstallmentsLeft = loanPeriod; numberOfInstallmentsLeft > 0; --numberOfInstallmentsLeft) {
             BigDecimal principal = interestCalc.calculatePrincipal(numberOfInstallmentsLeft, loanBalance,
@@ -53,6 +50,18 @@ public class InstallmentService {
             save(installment);
             loanBalance = loanBalance.subtract(principal);
         }
+    }
+
+    public BigDecimal getInitialAmountToPay(Loan loan) {
+        return loan.getSchedule().stream()
+                .map(installment -> installment.getPrincipal().add(installment.getInterest()))
+                .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getAmountToPayLeftAfterPayment(Loan loan) {
+        return loan.getSchedule().stream()
+                .map(installment -> installment.getPrincipal().add(installment.getInterest()))
+                .reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
     }
 
 }

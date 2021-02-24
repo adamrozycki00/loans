@@ -48,8 +48,8 @@ public class InstallmentTest {
 
     @Before
     public void setUp() {
-        repository.deleteAll();
         loanRepository.deleteAll();
+        repository.deleteAll();
         applicationRepository.deleteAll();
         currencyRepository.deleteAll();
         customerRepository.deleteAll();
@@ -57,8 +57,8 @@ public class InstallmentTest {
 
     @After
     public void cleanUp() {
-        repository.deleteAll();
         loanRepository.deleteAll();
+        repository.deleteAll();
         applicationRepository.deleteAll();
         currencyRepository.deleteAll();
         customerRepository.deleteAll();
@@ -89,126 +89,6 @@ public class InstallmentTest {
 
         //then
         assertEquals(1, installmentsSize);
-    }
-
-    @Test
-    public void shouldDeleteInstallmentAndNotDeleteCustomer() {
-        //given
-        Customer customer = new Customer("John", "Smith");
-        customerRepository.save(customer);
-
-        Currency pln = new Currency("PLN");
-        currencyRepository.save(pln);
-
-        LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"));
-        applicationRepository.save(application);
-
-        Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
-        loanRepository.save(loan);
-
-        Installment installment = new Installment(LocalDate.now(), loan, 1,
-                new BigDecimal("100"), new BigDecimal("100"));
-        repository.save(installment);
-
-        //when
-        service.deleteById(installment.getId());
-        int installmentsSize = repository.findAll().size();
-        int customersSize = customerRepository.findAll().size();
-
-        //then
-        assertEquals(0, installmentsSize);
-        assertEquals(1, customersSize);
-    }
-
-    @Test
-    public void shouldDeleteInstallmentAndNotDeleteCurrency() {
-        //given
-        Customer customer = new Customer("John", "Smith");
-        customerRepository.save(customer);
-
-        Currency pln = new Currency("PLN");
-        currencyRepository.save(pln);
-
-        LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"));
-        applicationRepository.save(application);
-
-        Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
-        loanRepository.save(loan);
-
-        Installment installment = new Installment(LocalDate.now(), loan, 1,
-                new BigDecimal("100"), new BigDecimal("100"));
-        repository.save(installment);
-
-        //when
-        service.deleteById(installment.getId());
-        int installmentsSize = repository.findAll().size();
-        int currenciesSize = currencyRepository.findAll().size();
-
-        //then
-        assertEquals(0, installmentsSize);
-        assertEquals(1, currenciesSize);
-    }
-
-    @Test
-    public void shouldDeleteInstallmentAndNotDeleteApplication() {
-        //given
-        Customer customer = new Customer("John", "Smith");
-        customerRepository.save(customer);
-
-        Currency pln = new Currency("PLN");
-        currencyRepository.save(pln);
-
-        LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"));
-        applicationRepository.save(application);
-
-        Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
-        loanRepository.save(loan);
-
-        Installment installment = new Installment(LocalDate.now(), loan, 1,
-                new BigDecimal("100"), new BigDecimal("100"));
-        repository.save(installment);
-
-        //when
-        service.deleteById(installment.getId());
-        int installmentsSize = repository.findAll().size();
-        int applicationsSize = customerRepository.findAll().size();
-
-        //then
-        assertEquals(0, installmentsSize);
-        assertEquals(1, applicationsSize);
-    }
-
-    @Test
-    public void shouldDeleteInstallmentAndNotDeleteLoan() {
-        //given
-        Customer customer = new Customer("John", "Smith");
-        customerRepository.save(customer);
-
-        Currency pln = new Currency("PLN");
-        currencyRepository.save(pln);
-
-        LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
-                new BigDecimal("1000"), 12, new BigDecimal(".05"));
-        applicationRepository.save(application);
-
-        Loan loan = new Loan(LocalDateTime.now(), application, new BigDecimal(".05"));
-        loanRepository.save(loan);
-
-        Installment installment = new Installment(LocalDate.now(), loan, 1,
-                new BigDecimal("100"), new BigDecimal("100"));
-        repository.save(installment);
-
-        //when
-        service.deleteById(installment.getId());
-        int installmentsSize = repository.findAll().size();
-        int loansSize = loanRepository.findAll().size();
-
-        //then
-        assertEquals(0, installmentsSize);
-        assertEquals(1, loansSize);
     }
 
 }

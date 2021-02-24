@@ -1,8 +1,6 @@
 package com.tenetmind.loans.operation.service;
 
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
-import com.tenetmind.loans.currency.domainmodel.Currency;
-import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
 import com.tenetmind.loans.installment.domainmodel.Installment;
 import com.tenetmind.loans.installment.service.InstallmentService;
@@ -15,14 +13,15 @@ import com.tenetmind.loans.operation.domainmodel.Operation;
 import com.tenetmind.loans.operation.repository.OperationRepository;
 import com.tenetmind.loans.operation.service.processor.OperationProcessor;
 import com.tenetmind.loans.operation.service.processor.PaymentAmountException;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Optional;
+
+import static org.hibernate.Hibernate.initialize;
 
 @Service
 public class OperationService {
@@ -66,10 +65,14 @@ public class OperationService {
                 .orElseThrow(LoanNotFoundException::new);
         loan.setBalance(loan.getAmount());
         loan.setStatus("Active");
-
         loanService.save(loan);
 
-        installmentService.makeSchedule(loan, interestCalc);
+        installmentService.makeInitialSchedule(loan, interestCalc);
+
+        loan = loanService.findById(paymentDto.getLoanId())
+                .orElseThrow(LoanNotFoundException::new);
+        loan.setAmountToPay(installmentService.getInitialAmountToPay(loan));
+        loanService.save(loan);
     }
 
     public void payInstallment(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyConversionException,
