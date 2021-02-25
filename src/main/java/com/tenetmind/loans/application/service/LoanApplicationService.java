@@ -46,8 +46,8 @@ public class LoanApplicationService {
 
         LoanApplication savedApplication = repository.save(application);
 
-        if (application.getStatus().equals(ACCEPTED)) {
-            Loan newLoan = new Loan(LocalDateTime.now(), application, BigDecimal.ZERO);
+        if (savedApplication.getStatus().equals(ACCEPTED)) {
+            Loan newLoan = new Loan(LocalDateTime.now(), savedApplication, BigDecimal.ZERO);
             loanService.save(newLoan);
         }
 

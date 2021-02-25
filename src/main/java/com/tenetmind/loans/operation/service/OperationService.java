@@ -2,7 +2,6 @@ package com.tenetmind.loans.operation.service;
 
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
-import com.tenetmind.loans.installment.domainmodel.Installment;
 import com.tenetmind.loans.installment.service.InstallmentService;
 import com.tenetmind.loans.installment.service.interestcalc.InterestCalc;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
@@ -11,17 +10,14 @@ import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
 import com.tenetmind.loans.loan.service.LoanService;
 import com.tenetmind.loans.operation.domainmodel.Operation;
 import com.tenetmind.loans.operation.repository.OperationRepository;
+import com.tenetmind.loans.operation.service.accounting.AccountingUnit;
 import com.tenetmind.loans.operation.service.processor.OperationProcessor;
 import com.tenetmind.loans.operation.service.processor.PaymentAmountException;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
-import static org.hibernate.Hibernate.initialize;
 
 @Service
 public class OperationService {
@@ -33,13 +29,10 @@ public class OperationService {
     private OperationProcessor processor;
 
     @Autowired
+    private AccountingUnit accountingUnit;
+
+    @Autowired
     private LoanService loanService;
-
-    @Autowired
-    private InstallmentService installmentService;
-
-    @Autowired
-    private InterestCalc interestCalc;
 
     public List<Operation> findAll() {
         return repository.findAll();
@@ -59,35 +52,21 @@ public class OperationService {
 
     public void makeLoan(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyConversionException,
             LoanNotFoundException, InvalidLoanStatusException {
-        save(processor.prepareMakingLoan(paymentDto));
 
-        Loan loan = loanService.findById(paymentDto.getLoanId())
-                .orElseThrow(LoanNotFoundException::new);
-        int numberOfInstallmentsPaid = loan.getNumberOfInstallmentsPaid();
+        Operation makingLoan = processor.prepareMakingLoan(paymentDto);
+        save(makingLoan);
 
-
-        loan.setBalance(loan.getAmount());
-        loan.setStatus("Active");
-        loanService.save(loan);
-
-        installmentService.makeInitialSchedule(loan, interestCalc);
-
-        loan = loanService.findById(paymentDto.getLoanId())
-                .orElseThrow(LoanNotFoundException::new);
-        loan.setAmountToPay(processor.getInitialAmountToPay(loan));
-        loanService.save(loan);
+        Loan madeLoan = accountingUnit.settleMakingLoan(paymentDto);
+        loanService.save(madeLoan);
     }
 
     public void payInstallment(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyConversionException,
             PaymentAmountException, LoanNotFoundException, InvalidLoanStatusException {
-        save(processor.prepareInstallmentPayment(paymentDto));
+        Operation installmentPayment = processor.prepareInstallmentPayment(paymentDto);
+        save(installmentPayment);
 
-        Loan loan = loanService.findById(paymentDto.getLoanId())
-                .orElseThrow(LoanNotFoundException::new);
-        BigDecimal amountInLoanCurrency = processor.getAmountInLoanCurrency(paymentDto);
-        loan.setBalance(loan.getBalance().subtract(amountInLoanCurrency));
-        loan.setAmountToPay(processor.getAmountToPayLeftAfterPayment(paymentDto));
-        loanService.save(loan);
+        Loan loanAfterSettlementOfPayment = accountingUnit.settleInstallmentPayment(paymentDto);
+        loanService.save(loanAfterSettlementOfPayment);
     }
 
 }

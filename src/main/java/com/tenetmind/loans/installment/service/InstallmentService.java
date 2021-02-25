@@ -5,6 +5,7 @@ import com.tenetmind.loans.installment.repository.InstallmentRepository;
 import com.tenetmind.loans.installment.service.interestcalc.InterestCalc;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
+import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
 import com.tenetmind.loans.loan.service.LoanService;
 import com.tenetmind.loans.operation.service.PaymentDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class InstallmentService {
 
     @Autowired
     private InstallmentRepository repository;
+
+    @Autowired
+    private InterestCalc interestCalc;
 
     public List<Installment> findAll() {
         return repository.findAll();
@@ -37,7 +41,7 @@ public class InstallmentService {
         repository.deleteById(id);
     }
 
-    public void makeInitialSchedule(Loan loan, InterestCalc interestCalc) {
+    public void makeInitialSchedule(Loan loan) {
         int loanPeriod = loan.getPeriod();
         BigDecimal loanBalance = loan.getAmount();
         BigDecimal interestRate = loan.getBaseRate().add(loan.getMarginRate());
@@ -54,6 +58,5 @@ public class InstallmentService {
             loanBalance = loanBalance.subtract(principal);
         }
     }
-
 
 }

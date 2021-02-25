@@ -2,6 +2,7 @@ package com.tenetmind.loans.loan.service;
 
 import com.tenetmind.loans.application.domainmodel.LoanApplication;
 import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
+import com.tenetmind.loans.installment.service.InstallmentService;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.loan.repository.LoanRepository;
@@ -25,6 +26,9 @@ public class LoanService {
     @Autowired
     private LoanRepository repository;
 
+    @Autowired
+    private InstallmentService installmentService;
+
     public List<Loan> findAll() {
         return repository.findAll();
     }
@@ -41,6 +45,12 @@ public class LoanService {
         if (!validateStatus(loan.getStatus())) {
             throw new InvalidLoanStatusException();
         }
+
+        if (loan.getStatus().equals(NEW) && loan.getSchedule().isEmpty()) {
+            loan = repository.save(loan);
+            installmentService.makeInitialSchedule(loan);
+        }
+
         return repository.save(loan);
     }
 

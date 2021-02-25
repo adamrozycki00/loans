@@ -189,14 +189,14 @@ public class OperationTest {
         application.setStatus("accepted");
         applicationService.save(application);
 
-        Loan createdLoan = loanService.find(application).get();
+        Loan createdLoan = loanService.save(new Loan(LocalDateTime.now(), application, new BigDecimal(".05")));
 
         double balanceBeforeMakingLoan = createdLoan.getBalance().doubleValue();
-        PaymentDto paymentDto = new PaymentDto(LocalDate.now(), createdLoan.getId());
+        PaymentDto initialPaymentDto = new PaymentDto(LocalDate.now(), createdLoan.getId());
 
         //when
-        service.makeLoan(paymentDto);
-        Loan madeLoan = loanService.find(application).get();
+        service.makeLoan(initialPaymentDto);
+        Loan madeLoan = loanService.findById(createdLoan.getId()).get();
         double balanceAfterMakingLoan = madeLoan.getBalance().doubleValue();
 
         //then
@@ -220,13 +220,14 @@ public class OperationTest {
         application.setStatus("accepted");
         applicationService.save(application);
 
-        Loan createdLoan = loanService.find(application).get();
+        Loan createdLoan = loanService.save(new Loan(LocalDateTime.now(), application, new BigDecimal(".05")));
+
         String statusBeforeMakingLoan = createdLoan.getStatus();
-        PaymentDto paymentDto = new PaymentDto(LocalDate.now(), createdLoan.getId());
+        PaymentDto initialPaymentDto = new PaymentDto(LocalDate.now(), createdLoan.getId());
 
         //when
-        service.makeLoan(paymentDto);
-        Loan madeLoan = loanService.find(application).get();
+        service.makeLoan(initialPaymentDto);
+        Loan madeLoan = loanService.findById(createdLoan.getId()).get();
         String statusAfterMakingLoan = madeLoan.getStatus();
 
         //then
@@ -250,17 +251,21 @@ public class OperationTest {
         application.setStatus("accepted");
         applicationService.save(application);
 
-        Loan createdLoan = loanService.find(application).get();
+        Loan createdLoan = loanService.save(new Loan(LocalDateTime.now(), application, new BigDecimal(".05")));
+
         PaymentDto initialPaymentDto = new PaymentDto(LocalDate.now(), createdLoan.getId());
         service.makeLoan(initialPaymentDto);
-        Loan madeLoan = loanService.find(application).get();
+
+        Loan madeLoan = loanService.findById(createdLoan.getId()).get();
+
         double balanceBeforePayingInstallment = madeLoan.getBalance().doubleValue();
 
-        //when
         PaymentDto installmentPaymentDto = new PaymentDto(LocalDate.now(), madeLoan.getId(),
-                "PLN", new BigDecimal("100.00"));
+                "PLN", new BigDecimal("95.00"));
+
+        //when
         service.payInstallment(installmentPaymentDto);
-        Loan paidLoan = loanService.find(application).get();
+        Loan paidLoan = loanService.findById(createdLoan.getId()).get();
         double balanceAfterPayingInstallment = paidLoan.getBalance().doubleValue();
         double changeInBalance = balanceBeforePayingInstallment - balanceAfterPayingInstallment;
 
@@ -284,22 +289,25 @@ public class OperationTest {
         application.setStatus("accepted");
         applicationService.save(application);
 
-        Loan createdLoan = loanService.find(application).get();
+        Loan createdLoan = loanService.save(new Loan(LocalDateTime.now(), application, new BigDecimal(".05")));
+
         PaymentDto initialPaymentDto = new PaymentDto(LocalDate.now(), createdLoan.getId());
         service.makeLoan(initialPaymentDto);
-        Loan madeLoan = loanService.find(application).get();
+
+        Loan madeLoan = loanService.findById(createdLoan.getId()).get();
+
         double amountToPayBeforePayingInstallment = madeLoan.getAmountToPay().doubleValue();
+        PaymentDto installmentPaymentDto = new PaymentDto(LocalDate.now(), madeLoan.getId(),
+                "PLN", new BigDecimal("95.00"));
 
         //when
-        PaymentDto installmentPaymentDto = new PaymentDto(LocalDate.now(), madeLoan.getId(),
-                "PLN", new BigDecimal("100.00"));
         service.payInstallment(installmentPaymentDto);
-        Loan paidLoan = loanService.find(application).get();
+        Loan paidLoan = loanService.findById(createdLoan.getId()).get();
         double amountToPayAfterPayingInstallment = paidLoan.getAmountToPay().doubleValue();
         double changeInAmountToPay = amountToPayBeforePayingInstallment - amountToPayAfterPayingInstallment;
 
         //then
-        assertEquals(100, changeInAmountToPay, .01);
+        assertEquals(95, changeInAmountToPay, .01);
     }
 
 }
