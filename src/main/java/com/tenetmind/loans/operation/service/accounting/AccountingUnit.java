@@ -24,7 +24,7 @@ public class AccountingUnit {
     @Autowired
     private LoanService loanService;
 
-    public Loan settleMakingLoan(PaymentDto paymentDto) throws LoanNotFoundException {
+    public Loan prepareSettlementOfMakingLoan(PaymentDto paymentDto) throws LoanNotFoundException {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
 
@@ -35,7 +35,7 @@ public class AccountingUnit {
         return loan;
     }
 
-    public Loan settleInstallmentPayment(PaymentDto paymentDto) throws CurrencyConversionException,
+    public Loan prepareSettlementOfPayment(PaymentDto paymentDto) throws CurrencyConversionException,
             CurrencyNotFoundException, LoanNotFoundException {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);

@@ -2,8 +2,6 @@ package com.tenetmind.loans.operation.service;
 
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
-import com.tenetmind.loans.installment.service.InstallmentService;
-import com.tenetmind.loans.installment.service.interestcalc.InterestCalc;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
@@ -56,7 +54,7 @@ public class OperationService {
         Operation makingLoan = processor.prepareMakingLoan(paymentDto);
         save(makingLoan);
 
-        Loan madeLoan = accountingUnit.settleMakingLoan(paymentDto);
+        Loan madeLoan = accountingUnit.prepareSettlementOfMakingLoan(paymentDto);
         loanService.save(madeLoan);
     }
 
@@ -65,7 +63,7 @@ public class OperationService {
         Operation installmentPayment = processor.prepareInstallmentPayment(paymentDto);
         save(installmentPayment);
 
-        Loan loanAfterSettlementOfPayment = accountingUnit.settleInstallmentPayment(paymentDto);
+        Loan loanAfterSettlementOfPayment = accountingUnit.prepareSettlementOfPayment(paymentDto);
         loanService.save(loanAfterSettlementOfPayment);
     }
 
