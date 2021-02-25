@@ -1,12 +1,11 @@
 package com.tenetmind.loans.currencyrate.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.Currency;
-import com.tenetmind.loans.currencyrate.converter.BigDecimalConverter;
+import com.tenetmind.loans.config.BigDecimalConverter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -24,6 +23,7 @@ public class CurrencyRate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
     private LocalDate date;
 
     @ManyToOne
@@ -33,7 +33,8 @@ public class CurrencyRate {
     @Convert(converter = BigDecimalConverter.class)
     private BigDecimal rate;
 
-    public CurrencyRate(LocalDate date, Currency currency, BigDecimal rate) {
+    public CurrencyRate(String name, LocalDate date, Currency currency, BigDecimal rate) {
+        this.name = name;
         this.date = date;
         this.currency = currency;
         this.rate = rate;

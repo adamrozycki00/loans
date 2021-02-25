@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface CurrencyRateRepository extends JpaRepository<CurrencyRate, Long> {
 
-    Optional<CurrencyRate> findByDateAndCurrency(LocalDate date, Currency currency);
+    Optional<CurrencyRate> findByNameAndDateAndCurrency(String name, LocalDate date, Currency currency);
 
 }

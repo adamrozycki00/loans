@@ -1,4 +1,4 @@
-package com.tenetmind.loans.currency.service.converter;
+package com.tenetmind.loans.currencyrate.converter;
 
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
@@ -6,7 +6,7 @@ import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.service.CurrencyRateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,8 +14,10 @@ import java.util.Optional;
 
 import static java.math.BigDecimal.ROUND_HALF_EVEN;
 
-@Service
-public class CurrencyConverter {
+@Component
+public abstract class CurrencyRateConverterImpl implements CurrencyRateConverter {
+
+    private String currencyRateName = "";
 
     @Autowired
     private CurrencyRateService currencyRateService;
@@ -23,9 +25,18 @@ public class CurrencyConverter {
     @Autowired
     private CurrencyService currencyService;
 
+    public String getCurrencyRateName() {
+        return currencyRateName;
+    }
+
+    protected void setCurrencyRateName(String currencyRateName) {
+        this.currencyRateName = currencyRateName;
+    }
+
+    @Override
     public BigDecimal convert(BigDecimal originalAmount, String originalCurrencyName,
                               String outputCurrencyName, LocalDate date)
-            throws CurrencyConversionException, CurrencyNotFoundException {
+            throws CurrencyRateConversionException, CurrencyNotFoundException {
         Currency originalCurrency = currencyService.find(originalCurrencyName)
                 .orElseThrow(CurrencyNotFoundException::new);
         Currency outputCurrency = currencyService.find(outputCurrencyName)
@@ -49,8 +60,9 @@ public class CurrencyConverter {
         return convertFromPln(amountInPln, outputCurrencyName, date);
     }
 
+    @Override
     public BigDecimal convertToPln(BigDecimal originalAmount, String originalCurrencyName, LocalDate date)
-            throws CurrencyConversionException, CurrencyNotFoundException {
+            throws CurrencyRateConversionException, CurrencyNotFoundException {
         Currency originalCurrency = currencyService.find(originalCurrencyName)
                 .orElseThrow(CurrencyNotFoundException::new);
 
@@ -58,15 +70,16 @@ public class CurrencyConverter {
             return originalAmount;
         }
 
-        Optional<CurrencyRate> originalRate = currencyRateService.getRate(date, originalCurrency.getName());
+        Optional<CurrencyRate> originalRate = currencyRateService.getRate(currencyRateName, date, originalCurrency.getName());
         return originalRate
                 .map(CurrencyRate::getRate)
                 .map(originalAmount::multiply)
-                .orElseThrow(CurrencyConversionException::new);
+                .orElseThrow(CurrencyRateConversionException::new);
     }
 
+    @Override
     public BigDecimal convertFromPln(BigDecimal originalAmount, String outputCurrencyName, LocalDate date)
-            throws CurrencyConversionException, CurrencyNotFoundException {
+            throws CurrencyRateConversionException, CurrencyNotFoundException {
         Currency outputCurrency = currencyService.find(outputCurrencyName)
                 .orElseThrow(CurrencyNotFoundException::new);
 
@@ -74,11 +87,11 @@ public class CurrencyConverter {
             return originalAmount;
         }
 
-        Optional<CurrencyRate> outputRate = currencyRateService.getRate(date, outputCurrency.getName());
+        Optional<CurrencyRate> outputRate = currencyRateService.getRate(currencyRateName, date, outputCurrency.getName());
         return outputRate
                 .map(CurrencyRate::getRate)
                 .map(rate -> originalAmount.divide(rate, 4, ROUND_HALF_EVEN))
-                .orElseThrow(CurrencyConversionException::new);
+                .orElseThrow(CurrencyRateConversionException::new);
     }
 
 }

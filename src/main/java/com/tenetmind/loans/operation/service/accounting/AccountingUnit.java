@@ -1,7 +1,7 @@
 package com.tenetmind.loans.operation.service.accounting;
 
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
-import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
+import com.tenetmind.loans.currencyrate.converter.CurrencyRateConversionException;
 import com.tenetmind.loans.installment.domainmodel.Installment;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
@@ -35,7 +35,7 @@ public class AccountingUnit {
         return loan;
     }
 
-    public Loan prepareSettlementOfPayment(PaymentDto paymentDto) throws CurrencyConversionException,
+    public Loan prepareSettlementOfPayment(PaymentDto paymentDto) throws CurrencyRateConversionException,
             CurrencyNotFoundException, LoanNotFoundException {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);

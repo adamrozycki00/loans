@@ -3,14 +3,17 @@ package com.tenetmind.loans.operation.service.processor;
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
-import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
-import com.tenetmind.loans.currency.service.converter.CurrencyConverter;
+import com.tenetmind.loans.currencyrate.converter.CurrencyRateConversionException;
+import com.tenetmind.loans.currencyrate.converter.CurrencyRateConverter;
+import com.tenetmind.loans.currencyrate.converter.CurrencyRateConverterImpl;
+import com.tenetmind.loans.currencyrate.converter.NbpRateConverter;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.loan.service.LoanService;
 import com.tenetmind.loans.operation.domainmodel.Operation;
 import com.tenetmind.loans.operation.service.PaymentDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -20,8 +23,7 @@ import static java.math.BigDecimal.ROUND_HALF_EVEN;
 @Service
 public class OperationProcessor {
 
-    @Autowired
-    private CurrencyConverter converter;
+    private CurrencyRateConverter converter;
 
     @Autowired
     private CurrencyService currencyService;
@@ -29,8 +31,18 @@ public class OperationProcessor {
     @Autowired
     private LoanService loanService;
 
+    public CurrencyRateConverter getConverter() {
+        return converter;
+    }
+
+    @Autowired
+    @Qualifier("nbpRateConverter")
+    public void setConverter(CurrencyRateConverter converter) {
+        this.converter = converter;
+    }
+
     public Operation prepareMakingLoan(PaymentDto paymentDto) throws CurrencyNotFoundException,
-            CurrencyConversionException, LoanNotFoundException {
+            CurrencyRateConversionException, LoanNotFoundException {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
 
@@ -43,7 +55,7 @@ public class OperationProcessor {
     }
 
     public Operation prepareInstallmentPayment(PaymentDto paymentDto)
-            throws CurrencyNotFoundException, CurrencyConversionException,
+            throws CurrencyNotFoundException, CurrencyRateConversionException,
             PaymentAmountException, LoanNotFoundException {
         if (paymentAmountIsIncorrect(paymentDto)) {
             throw new PaymentAmountException();
@@ -64,7 +76,7 @@ public class OperationProcessor {
     }
 
     public BigDecimal getAmountInLoanCurrency(PaymentDto paymentDto)
-            throws CurrencyNotFoundException, CurrencyConversionException, LoanNotFoundException {
+            throws CurrencyNotFoundException, CurrencyRateConversionException, LoanNotFoundException {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
 

@@ -56,9 +56,9 @@ public class CurrencyRateServiceTest {
         currencyService.save(new Currency(eur));
 
         //when
-        service.getNewRateAndSave(eur, date);
+        service.getNewNbpRateAndSave(eur, date);
         int currencyRatesSize = service.findAll().size();
-        CurrencyRate rate = service.getRate(date, eur).get();
+        CurrencyRate rate = service.getRate("NBP", date, eur).get();
 
         //then
         assertEquals(1, currencyRatesSize);
@@ -72,11 +72,11 @@ public class CurrencyRateServiceTest {
         LocalDate date = LocalDate.of(2021, 2, 25);
         Currency currency = currencyService.save(new Currency(eur));
         BigDecimal testingRate = BigDecimal.ONE;
-        service.save(new CurrencyRate(date, currency, testingRate));
+        service.save(new CurrencyRate("NBP", date, currency, testingRate));
 
         //when
-        service.getNewRateAndSave(eur, date);
-        Optional<CurrencyRate> rateOptional = service.getRate(date, currency.getName());
+        service.getNewNbpRateAndSave(eur, date);
+        Optional<CurrencyRate> rateOptional = service.getRate("NBP", date, currency.getName());
 
         //then
         BigDecimal rate = rateOptional.get().getRate();

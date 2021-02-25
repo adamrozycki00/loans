@@ -5,7 +5,6 @@ import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currencyrate.client.CurrencyRateClient;
 import com.tenetmind.loans.currencyrate.client.nbp.NbpRatesDto;
-import com.tenetmind.loans.currencyrate.controller.CurrencyRateNotFoundException;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +36,14 @@ public class CurrencyRateService {
         return repository.findById(id);
     }
 
-    public Optional<CurrencyRate> getRate(LocalDate date, String currencyName) throws CurrencyNotFoundException {
+    public Optional<CurrencyRate> getRate(String name, LocalDate date, String currencyName) throws CurrencyNotFoundException {
         Currency currency = currencyService.find(currencyName)
                 .orElseThrow(CurrencyNotFoundException::new);
-        return repository.findByDateAndCurrency(date, currency);
+        return repository.findByNameAndDateAndCurrency(name, date, currency);
     }
 
     public CurrencyRate save(CurrencyRate rate) throws CurrencyNotFoundException {
-        Optional<CurrencyRate> optionalCurrency = getRate(rate.getDate(), rate.getCurrency().getName());
+        Optional<CurrencyRate> optionalCurrency = getRate(rate.getName(), rate.getDate(), rate.getCurrency().getName());
         return optionalCurrency.orElseGet(() -> repository.save(rate));
     }
 
@@ -61,7 +60,7 @@ public class CurrencyRateService {
                 .forEach(date ->
                         currencies.forEach(currency -> {
                             try {
-                                getNewRateAndSave(currency.getName(), date);
+                                getNewNbpRateAndSave(currency.getName(), date);
                             } catch (CurrencyNotFoundException e) {
                                 e.printStackTrace();
                             }
@@ -79,11 +78,11 @@ public class CurrencyRateService {
         return currencies;
     }
 
-    public void getNewRateAndSave(String currencyName, LocalDate date)
+    public void getNewNbpRateAndSave(String currencyName, LocalDate date)
             throws CurrencyNotFoundException {
         Optional<CurrencyRate> fromNbp = getFromNbp(currencyName, date);
         if (fromNbp.isPresent()) {
-            Optional<CurrencyRate> currencyRate = getRate(date, currencyName);
+            Optional<CurrencyRate> currencyRate = getRate("NBP", date, currencyName);
             if (currencyRate.isEmpty()) {
                 save(fromNbp.get());
             }
@@ -101,7 +100,7 @@ public class CurrencyRateService {
 
         if (nbpRate.isPresent()) {
             BigDecimal rate = new BigDecimal(nbpRate.get().getRates().get(0).getMid());
-            CurrencyRate currencyRate = new CurrencyRate(date, currency.get(), rate);
+            CurrencyRate currencyRate = new CurrencyRate("NBP", date, currency.get(), rate);
             return Optional.of(currencyRate);
         } else {
             return Optional.empty();

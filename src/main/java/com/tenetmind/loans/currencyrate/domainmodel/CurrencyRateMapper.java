@@ -15,6 +15,7 @@ public class CurrencyRateMapper {
 
     public CurrencyRate mapToNewEntity(final CurrencyRateDto dto) {
         return new CurrencyRate(
+                dto.getName(),
                 dto.getDate(),
                 currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getRate());
@@ -23,6 +24,7 @@ public class CurrencyRateMapper {
     public CurrencyRate mapToExistingEntity(final CurrencyRateDto dto) {
         return new CurrencyRate(
                 dto.getId(),
+                dto.getName(),
                 dto.getDate(),
                 currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getRate());
@@ -31,6 +33,7 @@ public class CurrencyRateMapper {
     public CurrencyRateDto mapToDto(final CurrencyRate entity) {
         return new CurrencyRateDto(
                 entity.getId(),
+                entity.getName(),
                 entity.getDate(),
                 currencyMapper.mapToDto(entity.getCurrency()),
                 entity.getRate());

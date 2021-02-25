@@ -49,7 +49,7 @@ public class CurrencyRateTest {
         Currency pln = new Currency("PLN");
         currencyRepository.save(pln);
 
-        CurrencyRate currencyRate = new CurrencyRate(LocalDate.now(), pln, new BigDecimal(".05"));
+        CurrencyRate currencyRate = new CurrencyRate("NBP", LocalDate.now(), pln, new BigDecimal(".05"));
 
         //when
         service.save(currencyRate);
@@ -65,7 +65,7 @@ public class CurrencyRateTest {
         Currency pln = new Currency("PLN");
         currencyRepository.save(pln);
 
-        CurrencyRate currencyRate = new CurrencyRate(LocalDate.now(), pln, new BigDecimal(".05"));
+        CurrencyRate currencyRate = new CurrencyRate("NBP", LocalDate.now(), pln, new BigDecimal(".05"));
         repository.save(currencyRate);
 
         //when

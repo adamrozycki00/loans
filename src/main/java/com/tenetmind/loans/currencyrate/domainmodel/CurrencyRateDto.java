@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class CurrencyRateDto {
 
     private final Long id;
+    private final String name;
     private final LocalDate date;
     private final CurrencyDto currencyDto;
     private final BigDecimal rate;

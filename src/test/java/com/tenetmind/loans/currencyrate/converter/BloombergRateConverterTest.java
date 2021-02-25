@@ -1,38 +1,68 @@
-package com.tenetmind.loans.currency.service.converter;
+package com.tenetmind.loans.currencyrate.converter;
 
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
+import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.currency.service.CurrencyService;
-import com.tenetmind.loans.currency.service.converter.CurrencyConversionException;
-import com.tenetmind.loans.currency.service.converter.CurrencyConverter;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
+import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import com.tenetmind.loans.currencyrate.service.CurrencyRateService;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CurrencyConverterTest {
+public class BloombergRateConverterTest {
+
+    private CurrencyRateConverter converter;
 
     @Autowired
     private CurrencyService currencyService;
 
     @Autowired
+    private CurrencyRepository currencyRepository;
+
+    @Autowired
     private CurrencyRateService currencyRateService;
 
     @Autowired
-    private CurrencyConverter converter;
+    private CurrencyRateRepository currencyRateRepository;
+
+    public CurrencyRateConverter getConverter() {
+        return converter;
+    }
+
+    @Qualifier("bloombergRateConverter")
+    @Autowired
+    public void setConverter(CurrencyRateConverter converter) {
+        this.converter = converter;
+    }
+
+    @Before
+    public void setUp() {
+        currencyRateRepository.deleteAll();
+        currencyRepository.deleteAll();
+    }
+
+    @After
+    public void cleanUp() {
+        currencyRateRepository.deleteAll();
+        currencyRepository.deleteAll();
+    }
 
     @Test
-    public void shouldConvertGivenCurrencies() throws CurrencyConversionException, CurrencyNotFoundException {
+    public void shouldConvertGivenCurrencies() throws CurrencyRateConversionException, CurrencyNotFoundException {
         //given
         Currency pln = new Currency("pln");
         currencyService.save(pln);
@@ -43,10 +73,10 @@ public class CurrencyConverterTest {
         Currency usd = new Currency("usd");
         currencyService.save(usd);
 
-        CurrencyRate eurRate = new CurrencyRate(LocalDate.now(), eur, new BigDecimal("4.0000"));
+        CurrencyRate eurRate = new CurrencyRate("Bloomberg", LocalDate.now(), eur, new BigDecimal("4.0000"));
         currencyRateService.save(eurRate);
 
-        CurrencyRate usdRate = new CurrencyRate(LocalDate.now(), usd, new BigDecimal("3.0000"));
+        CurrencyRate usdRate = new CurrencyRate("Bloomberg", LocalDate.now(), usd, new BigDecimal("3.0000"));
         currencyRateService.save(usdRate);
 
         //when

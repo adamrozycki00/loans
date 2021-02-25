@@ -1,11 +1,11 @@
-package com.tenetmind.loans.currencyrate.converter;
+package com.tenetmind.loans.config;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 import java.math.BigDecimal;
 
 /*
-* The class *BigDecimalConverter* is taken from:
+* The code for the class BigDecimalConverter* is taken from:
 * http://vvratha.blogspot.com/2016/08/supporting-hibernate-precisionscale-for.html
 * */
 
