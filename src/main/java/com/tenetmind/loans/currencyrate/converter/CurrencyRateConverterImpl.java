@@ -6,6 +6,7 @@ import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.service.CurrencyRateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -15,6 +16,7 @@ import java.util.Optional;
 import static java.math.BigDecimal.ROUND_HALF_EVEN;
 
 @Component
+@Scope("prototype")
 public abstract class CurrencyRateConverterImpl implements CurrencyRateConverter {
 
     private String currencyRateName = "";
