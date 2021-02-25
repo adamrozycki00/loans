@@ -49,14 +49,13 @@ public class AccountingUnit {
         while (paidAmountToSettle.compareTo(BigDecimal.ZERO) > 0
                 && loan.getNumberOfInstallmentsPaid() < loan.getPeriod()) {
             int currentNumberOfInstallmentsSettled = loan.getNumberOfInstallmentsPaid();
-            Installment nextInstallmentToSettle = schedule.stream()
-                    .filter(installment -> installment.getNumber() == currentNumberOfInstallmentsSettled + 1)
-                    .collect(Collectors.toList())
-                    .get(0);
+            Installment nextInstallmentToSettle =
+                    getNextInstallmentToSettle(schedule, currentNumberOfInstallmentsSettled);
 
             BigDecimal interestInNextInstallmentToSettle = nextInstallmentToSettle.getInterest();
             BigDecimal principalInNextInstallmentToSettle = nextInstallmentToSettle.getPrincipal();
-            BigDecimal amountInNextInstallmentToSettle = interestInNextInstallmentToSettle.add(principalInNextInstallmentToSettle);
+            BigDecimal amountInNextInstallmentToSettle =
+                    interestInNextInstallmentToSettle.add(principalInNextInstallmentToSettle);
 
             if (paidAmountToSettle.compareTo(amountInNextInstallmentToSettle) >= 0) {
                 loan.setBalance(loan.getBalance().subtract(principalInNextInstallmentToSettle));
@@ -75,6 +74,13 @@ public class AccountingUnit {
         }
 
         return loan;
+    }
+
+    private Installment getNextInstallmentToSettle(List<Installment> schedule, int currentNumberOfInstallmentsSettled) {
+        return schedule.stream()
+                .filter(installment -> installment.getNumber() == currentNumberOfInstallmentsSettled + 1)
+                .collect(Collectors.toList())
+                .get(0);
     }
 
     private BigDecimal getInitialAmountToPay(Loan loan) {
