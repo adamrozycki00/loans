@@ -54,8 +54,8 @@ public class OperationService {
         Operation makingLoan = processor.prepareMakingLoan(paymentDto);
         save(makingLoan);
 
-        Loan madeLoan = accountingUnit.prepareSettlementOfMakingLoan(paymentDto);
-        loanService.save(madeLoan);
+        Loan loanAfterSettlementOfMakingLoan = accountingUnit.prepareSettlementOfMakingLoan(paymentDto);
+        loanService.save(loanAfterSettlementOfMakingLoan);
     }
 
     public void payInstallment(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyConversionException,
