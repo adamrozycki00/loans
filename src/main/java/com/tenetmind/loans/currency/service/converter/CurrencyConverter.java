@@ -58,7 +58,7 @@ public class CurrencyConverter {
             return originalAmount;
         }
 
-        Optional<CurrencyRate> originalRate = currencyRateService.getRate(date, originalCurrency);
+        Optional<CurrencyRate> originalRate = currencyRateService.getRate(date, originalCurrency.getName());
         return originalRate
                 .map(CurrencyRate::getRate)
                 .map(originalAmount::multiply)
@@ -74,7 +74,7 @@ public class CurrencyConverter {
             return originalAmount;
         }
 
-        Optional<CurrencyRate> outputRate = currencyRateService.getRate(date, outputCurrency);
+        Optional<CurrencyRate> outputRate = currencyRateService.getRate(date, outputCurrency.getName());
         return outputRate
                 .map(CurrencyRate::getRate)
                 .map(rate -> originalAmount.divide(rate, 4, ROUND_HALF_EVEN))
