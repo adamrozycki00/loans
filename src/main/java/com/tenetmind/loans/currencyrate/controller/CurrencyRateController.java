@@ -1,5 +1,6 @@
 package com.tenetmind.loans.currencyrate.controller;
 
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRateDto;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRateMapper;
 import com.tenetmind.loans.currencyrate.service.CurrencyRateService;
@@ -44,12 +45,14 @@ public class CurrencyRateController {
     }
 
     @RequestMapping(value = "", method = PUT)
-    public CurrencyRateDto update(@RequestBody CurrencyRateDto currencyRateDto) {
+    public CurrencyRateDto update(@RequestBody CurrencyRateDto currencyRateDto)
+            throws CurrencyNotFoundException {
         return mapper.mapToDto(service.save(mapper.mapToExistingEntity(currencyRateDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void create(@RequestBody CurrencyRateDto currencyRateDto) {
+    public void create(@RequestBody CurrencyRateDto currencyRateDto)
+            throws CurrencyNotFoundException {
         service.save(mapper.mapToNewEntity(currencyRateDto));
     }
 

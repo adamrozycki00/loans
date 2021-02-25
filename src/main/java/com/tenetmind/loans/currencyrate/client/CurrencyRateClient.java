@@ -1,7 +1,7 @@
 package com.tenetmind.loans.currencyrate.client;
 
 import com.tenetmind.loans.currencyrate.client.nbp.NbpRatesDto;
-import com.tenetmind.loans.currencyrate.config.CurrencyRateConfiguration;
+import com.tenetmind.loans.currencyrate.client.config.CurrencyRateConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -10,6 +10,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.Optional;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 @Component
@@ -23,8 +24,13 @@ public class CurrencyRateClient {
 
     public Optional<NbpRatesDto> getNbpRates(String code, String date) {
 
+        try {
             NbpRatesDto currencyRatesResponse = restTemplate.getForObject(getUrl(code, date), NbpRatesDto.class);
             return ofNullable(currencyRatesResponse);
+        } catch (Exception e) {
+            return empty();
+        }
+
     }
 
     private URI getUrl(String code, String date) {

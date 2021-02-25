@@ -27,7 +27,8 @@ public class CurrencyService {
     }
 
     public Currency save(Currency currency) {
-        return repository.save(currency);
+        Optional<Currency> optionalCurrency = find(currency.getName());
+        return optionalCurrency.orElseGet(() -> repository.save(currency));
     }
 
     public void deleteById(Long id) {

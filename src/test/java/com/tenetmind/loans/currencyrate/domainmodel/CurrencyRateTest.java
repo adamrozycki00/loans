@@ -1,5 +1,6 @@
 package com.tenetmind.loans.currencyrate.domainmodel;
 
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
@@ -43,7 +44,7 @@ public class CurrencyRateTest {
     }
 
     @Test
-    public void shouldCreateCurrencyRate() {
+    public void shouldCreateCurrencyRate() throws CurrencyNotFoundException {
         //given
         Currency pln = new Currency("PLN");
         currencyRepository.save(pln);
