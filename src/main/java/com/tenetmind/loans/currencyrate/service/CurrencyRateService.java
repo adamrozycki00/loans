@@ -4,6 +4,9 @@ import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currencyrate.client.CurrencyRateClient;
+import com.tenetmind.loans.currencyrate.client.bloomberg.BloombergRatesDto;
+import com.tenetmind.loans.currencyrate.client.bloomberg.BloombergService;
+import com.tenetmind.loans.currencyrate.client.bloomberg.NbpService;
 import com.tenetmind.loans.currencyrate.client.nbp.NbpRatesDto;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
@@ -26,7 +29,10 @@ public class CurrencyRateService {
     private CurrencyService currencyService;
 
     @Autowired
-    private CurrencyRateClient rateClient;
+    private NbpService nbpService;
+
+    @Autowired
+    private BloombergService bloombergService;
 
     public List<CurrencyRate> findAll() {
         return repository.findAll();
@@ -36,14 +42,15 @@ public class CurrencyRateService {
         return repository.findById(id);
     }
 
-    public Optional<CurrencyRate> getRate(String name, LocalDate date, String currencyName) throws CurrencyNotFoundException {
+    public Optional<CurrencyRate> find(String name, LocalDate date, String currencyName)
+            throws CurrencyNotFoundException {
         Currency currency = currencyService.find(currencyName)
                 .orElseThrow(CurrencyNotFoundException::new);
         return repository.findByNameAndDateAndCurrency(name, date, currency);
     }
 
     public CurrencyRate save(CurrencyRate rate) throws CurrencyNotFoundException {
-        Optional<CurrencyRate> optionalCurrency = getRate(rate.getName(), rate.getDate(), rate.getCurrency().getName());
+        Optional<CurrencyRate> optionalCurrency = find(rate.getName(), rate.getDate(), rate.getCurrency().getName());
         return optionalCurrency.orElseGet(() -> repository.save(rate));
     }
 
@@ -53,6 +60,7 @@ public class CurrencyRateService {
 
     public void populateCurrencyRates() {
         List<Currency> currencies = populateCurrencies();
+
         LocalDate startingDate = LocalDate.of(2021, 1, 1);
         LocalDate lastDate = LocalDate.now();
 
@@ -60,51 +68,25 @@ public class CurrencyRateService {
                 .forEach(date ->
                         currencies.forEach(currency -> {
                             try {
-                                getNewNbpRateAndSave(currency.getName(), date);
+                                nbpService.getNewNbpRateAndSave(currency.getName(), date);
                             } catch (CurrencyNotFoundException e) {
                                 e.printStackTrace();
                             }
                         })
                 );
+
+        bloombergService.getNewBloombergRateAndSave();
     }
 
     private List<Currency> populateCurrencies() {
         List<Currency> currencies = Arrays.asList(
                 new Currency("pln"),
                 new Currency("eur"),
+                new Currency("gbp"),
                 new Currency("usd")
         );
         currencies.forEach(currencyService::save);
         return currencies;
-    }
-
-    public void getNewNbpRateAndSave(String currencyName, LocalDate date)
-            throws CurrencyNotFoundException {
-        Optional<CurrencyRate> fromNbp = getFromNbp(currencyName, date);
-        if (fromNbp.isPresent()) {
-            Optional<CurrencyRate> currencyRate = getRate("NBP", date, currencyName);
-            if (currencyRate.isEmpty()) {
-                save(fromNbp.get());
-            }
-        }
-    }
-
-    private Optional<CurrencyRate> getFromNbp(String currencyName, LocalDate date)
-            throws CurrencyNotFoundException {
-        Optional<Currency> currency = currencyService.find(currencyName);
-
-        if (currency.isEmpty())
-            throw new CurrencyNotFoundException();
-
-        Optional<NbpRatesDto> nbpRate = rateClient.getNbpRates(currencyName, date.toString());
-
-        if (nbpRate.isPresent()) {
-            BigDecimal rate = new BigDecimal(nbpRate.get().getRates().get(0).getMid());
-            CurrencyRate currencyRate = new CurrencyRate("NBP", date, currency.get(), rate);
-            return Optional.of(currencyRate);
-        } else {
-            return Optional.empty();
-        }
     }
 
 }

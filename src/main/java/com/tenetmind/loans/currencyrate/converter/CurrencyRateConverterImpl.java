@@ -72,7 +72,7 @@ public abstract class CurrencyRateConverterImpl implements CurrencyRateConverter
             return originalAmount;
         }
 
-        Optional<CurrencyRate> originalRate = currencyRateService.getRate(currencyRateName, date, originalCurrency.getName());
+        Optional<CurrencyRate> originalRate = currencyRateService.find(currencyRateName, date, originalCurrency.getName());
         return originalRate
                 .map(CurrencyRate::getRate)
                 .map(originalAmount::multiply)
@@ -89,7 +89,7 @@ public abstract class CurrencyRateConverterImpl implements CurrencyRateConverter
             return originalAmount;
         }
 
-        Optional<CurrencyRate> outputRate = currencyRateService.getRate(currencyRateName, date, outputCurrency.getName());
+        Optional<CurrencyRate> outputRate = currencyRateService.find(currencyRateName, date, outputCurrency.getName());
         return outputRate
                 .map(CurrencyRate::getRate)
                 .map(rate -> originalAmount.divide(rate, 4, ROUND_HALF_EVEN))
