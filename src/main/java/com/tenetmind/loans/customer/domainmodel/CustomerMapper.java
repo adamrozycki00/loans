@@ -11,21 +11,24 @@ public class CustomerMapper {
     public Customer mapToNewEntity(final CustomerDto dto) {
         return new Customer(
                 dto.getFirstName(),
-                dto.getLastName());
+                dto.getLastName(),
+                dto.getPesel());
     }
 
     public Customer mapToExistingEntity(final CustomerDto dto) {
         return new Customer(
                 dto.getId(),
                 dto.getFirstName(),
-                dto.getLastName());
+                dto.getLastName(),
+                dto.getPesel());
     }
 
     public CustomerDto mapToDto(final Customer entity) {
         return new CustomerDto(
                 entity.getId(),
                 entity.getFirstName(),
-                entity.getLastName());
+                entity.getLastName(),
+                entity.getPesel());
     }
 
     public List<CustomerDto> mapToDtoList(final List<Customer> currencies) {

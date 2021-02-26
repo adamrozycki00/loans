@@ -65,7 +65,7 @@ public class LoanTest {
     @Test
     public void shouldCreateLoan() throws InvalidLoanStatusException, InvalidApplicationStatusException {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -88,7 +88,7 @@ public class LoanTest {
     @Test
     public void shouldDeleteLoanAndNotDeleteCustomer() throws InvalidLoanStatusException, InvalidApplicationStatusException {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -114,7 +114,7 @@ public class LoanTest {
     @Test
     public void shouldDeleteLoanAndNotDeleteCurrency() throws InvalidLoanStatusException, InvalidApplicationStatusException {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -140,7 +140,7 @@ public class LoanTest {
     @Test
     public void shouldDeleteLoanAndNotDeleteLoanApplication() {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");

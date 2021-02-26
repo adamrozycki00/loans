@@ -34,7 +34,7 @@ public class CustomerTest {
     @Test
     public void shouldCreateCustomer() {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
 
         //when
         service.save(customer);

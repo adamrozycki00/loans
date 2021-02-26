@@ -21,10 +21,12 @@ public class Customer {
 
     private String firstName;
     private String lastName;
+    private String pesel;
 
-    public Customer(String firstName, String lastName) {
+    public Customer(String firstName, String lastName, String pesel) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.pesel = pesel;
     }
 
 }

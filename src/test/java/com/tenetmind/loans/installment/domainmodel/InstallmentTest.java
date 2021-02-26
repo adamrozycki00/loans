@@ -67,7 +67,7 @@ public class InstallmentTest {
     @Test
     public void shouldCreateInstallment() {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");

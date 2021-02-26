@@ -60,7 +60,7 @@ public class LoanApplicationTest {
     @Test
     public void shouldCreateLoanApplication() throws InvalidApplicationStatusException, InvalidLoanStatusException {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -80,7 +80,7 @@ public class LoanApplicationTest {
     @Test
     public void shouldDeleteLoanApplicationAndNotDeleteCurrency() {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -101,7 +101,7 @@ public class LoanApplicationTest {
     @Test
     public void shouldDeleteLoanApplicationAndNotDeleteCustomer() {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -123,7 +123,7 @@ public class LoanApplicationTest {
     public void shouldCreateLoanAfterAcceptingApplication() throws InvalidLoanStatusException,
             InvalidApplicationStatusException {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -143,7 +143,5 @@ public class LoanApplicationTest {
         assertEquals(0, loansSizeBeforeAcceptingApplication);
         assertEquals(1, loansSizeAfterAcceptingApplication);
     }
-
-
 
 }

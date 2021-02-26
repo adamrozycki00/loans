@@ -88,7 +88,7 @@ public class OperationTest {
     @Test
     public void shouldCreateOperation() {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -115,7 +115,7 @@ public class OperationTest {
     @Test
     public void shouldDeleteOperationAndNotDeleteCurrency() {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -145,7 +145,7 @@ public class OperationTest {
     @Test
     public void shouldDeleteOperationAndNotDeleteLoan() {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -177,7 +177,7 @@ public class OperationTest {
             InvalidApplicationStatusException, LoanNotFoundException, CurrencyNotFoundException,
             CurrencyRateConversionException {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -208,7 +208,7 @@ public class OperationTest {
             InvalidApplicationStatusException, LoanNotFoundException, CurrencyNotFoundException,
             CurrencyRateConversionException {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -239,7 +239,7 @@ public class OperationTest {
             InvalidApplicationStatusException, PaymentAmountException, LoanNotFoundException,
             CurrencyNotFoundException, CurrencyRateConversionException {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
@@ -277,7 +277,7 @@ public class OperationTest {
             InvalidApplicationStatusException, PaymentAmountException, LoanNotFoundException,
             CurrencyNotFoundException, CurrencyRateConversionException {
         //given
-        Customer customer = new Customer("John", "Smith");
+        Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
 
         Currency pln = new Currency("PLN");
