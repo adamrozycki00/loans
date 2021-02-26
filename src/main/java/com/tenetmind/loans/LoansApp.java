@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 
+import java.time.LocalDate;
+
 @SpringBootApplication
 public class LoansApp {
 
@@ -14,7 +16,7 @@ public class LoansApp {
         CurrencyRateService currencyRateService =
                 (CurrencyRateService) context.getBean("currencyRateService");
 
-        currencyRateService.populateCurrencyRates();
+        currencyRateService.populateCurrencyRates(LocalDate.of(2021, 1, 1));
     }
 
 }

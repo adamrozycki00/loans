@@ -42,4 +42,12 @@ public class Currency {
         return name.hashCode();
     }
 
+    @Override
+    public String toString() {
+        return "Currency{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
 }

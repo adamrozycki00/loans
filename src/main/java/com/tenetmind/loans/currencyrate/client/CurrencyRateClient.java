@@ -10,9 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
@@ -29,7 +27,6 @@ public class CurrencyRateClient {
     @Autowired
     private RestTemplate restTemplate;
 
-
     public Optional<NbpRatesDto> getNbpRates(String code, String date) {
         try {
             NbpRatesDto currencyRatesResponse = restTemplate.getForObject(getNbpUrl(code, date), NbpRatesDto.class);
@@ -45,8 +42,8 @@ public class CurrencyRateClient {
         headers.setContentType(APPLICATION_JSON);
         headers.setAccept(singletonList(APPLICATION_JSON));
 
-        headers.set("x-rapidapi-key", config.getRapidapiKey());
-        headers.set("x-rapidapi-host", config.getRapidapiHost());
+        headers.set("x-rapidapi-key", config.getRapidApiKey());
+        headers.set("x-rapidapi-host", config.getRapidApiHost());
 
         HttpEntity<BloombergRatesDto> request = new HttpEntity<>(headers);
 

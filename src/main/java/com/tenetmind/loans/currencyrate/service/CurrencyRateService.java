@@ -3,17 +3,13 @@ package com.tenetmind.loans.currencyrate.service;
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
-import com.tenetmind.loans.currencyrate.client.CurrencyRateClient;
-import com.tenetmind.loans.currencyrate.client.bloomberg.BloombergRatesDto;
 import com.tenetmind.loans.currencyrate.client.bloomberg.BloombergService;
-import com.tenetmind.loans.currencyrate.client.bloomberg.NbpService;
-import com.tenetmind.loans.currencyrate.client.nbp.NbpRatesDto;
+import com.tenetmind.loans.currencyrate.client.nbp.NbpService;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -58,13 +54,10 @@ public class CurrencyRateService {
         repository.deleteById(id);
     }
 
-    public void populateCurrencyRates() {
+    public void populateCurrencyRates(LocalDate startingDate) {
         List<Currency> currencies = populateCurrencies();
 
-        LocalDate startingDate = LocalDate.of(2021, 1, 1);
-        LocalDate lastDate = LocalDate.now();
-
-        startingDate.datesUntil(lastDate.plusDays(1))
+        startingDate.datesUntil(LocalDate.now().plusDays(1))
                 .forEach(date ->
                         currencies.forEach(currency -> {
                             try {
@@ -81,8 +74,8 @@ public class CurrencyRateService {
     private List<Currency> populateCurrencies() {
         List<Currency> currencies = Arrays.asList(
                 new Currency("pln"),
-                new Currency("eur"),
                 new Currency("gbp"),
+                new Currency("eur"),
                 new Currency("usd")
         );
         currencies.forEach(currencyService::save);

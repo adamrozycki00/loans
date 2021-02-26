@@ -31,7 +31,7 @@ public class BloombergService {
         fromBloomberg.ifPresent(currencyRates ->
                 currencyRates.forEach(rate -> {
                     try {
-                        Currency currency = currencyService.find(rate.getName())
+                        Currency currency = currencyService.find(rate.getCurrency().getName())
                                 .orElseThrow(CurrencyNotFoundException::new);
                         Optional<CurrencyRate> rateOptional =
                                 repository.findByNameAndDateAndCurrency("Bloomberg", LocalDate.now(), currency);
@@ -40,6 +40,7 @@ public class BloombergService {
                             updatedRate.setRate(rate.getRate());
                             repository.save(updatedRate);
                         } else {
+                            rate.setCurrency(currency);
                             repository.save(rate);
                         }
                     } catch (CurrencyNotFoundException e) {

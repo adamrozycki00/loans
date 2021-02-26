@@ -13,10 +13,10 @@ public class CurrencyRateConfiguration {
     private String bloombergApiEndpoint;
 
     @Value("3950354d4emshb477cc6b8ca8423p1efbd6jsn64276a9900d6")
-    private String rapidapiKey;
+    private String rapidApiKey;
 
     @Value("bloomberg-market-and-financial-news.p.rapidapi.com")
-    private String rapidapiHost;
+    private String rapidApiHost;
 
     public String getNbpApiEndpoint() {
         return nbpApiEndpoint;
@@ -26,11 +26,11 @@ public class CurrencyRateConfiguration {
         return bloombergApiEndpoint;
     }
 
-    public String getRapidapiKey() {
-        return rapidapiKey;
+    public String getRapidApiKey() {
+        return rapidApiKey;
     }
 
-    public String getRapidapiHost() {
-        return rapidapiHost;
+    public String getRapidApiHost() {
+        return rapidApiHost;
     }
 }

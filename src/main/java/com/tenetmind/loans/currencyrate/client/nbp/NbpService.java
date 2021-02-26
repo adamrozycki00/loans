@@ -1,10 +1,9 @@
-package com.tenetmind.loans.currencyrate.client.bloomberg;
+package com.tenetmind.loans.currencyrate.client.nbp;
 
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currencyrate.client.CurrencyRateClient;
-import com.tenetmind.loans.currencyrate.client.nbp.NbpRatesDto;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,7 +29,7 @@ public class NbpService {
             throws CurrencyNotFoundException {
         Optional<CurrencyRate> fromNbp = getFromNbp(currencyName, date);
         if (fromNbp.isPresent()) {
-            Currency currency = currencyService.find(fromNbp.get().getName())
+            Currency currency = currencyService.find(fromNbp.get().getCurrency().getName())
                     .orElseThrow(CurrencyNotFoundException::new);
             Optional<CurrencyRate> rateOptional = repository.findByNameAndDateAndCurrency("NBP", date, currency);
             if (rateOptional.isPresent()) {
@@ -39,6 +37,7 @@ public class NbpService {
                 updatedRate.setRate(fromNbp.get().getRate());
                 repository.save(updatedRate);
             } else {
+                fromNbp.get().setCurrency(currency);
                 repository.save(fromNbp.get());
             }
         }
