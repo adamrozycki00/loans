@@ -64,26 +64,6 @@ public class CurrencyRateClient {
         } catch (Exception e) {
             return empty();
         }
-//        return ofNullable(currencyRatesResponse);
-
-//        try {
-//            BloombergRatesDto currencyRatesResponse = response.getBody();
-//            return ofNullable(currencyRatesResponse);
-//        } catch (Exception e) {
-//            return empty();
-//        }
-
-//        // check response
-//        if (response.getStatusCode() == HttpStatus.OK) {
-//            System.out.println("Request Successful.");
-//            System.out.println(response.getBody());
-//        } else {
-//            System.out.println("Request Failed");
-//            System.out.println(response.getStatusCode());
-//        }
-
-
-
     }
 
     private URI getNbpUrl(String code, String date) {
