@@ -4,6 +4,7 @@ import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.installment.domainmodel.InstallmentDto;
 import com.tenetmind.loans.installment.domainmodel.InstallmentMapper;
 import com.tenetmind.loans.installment.service.InstallmentService;
+import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,12 +46,14 @@ public class InstallmentController {
     }
 
     @RequestMapping(value = "", method = PUT)
-    public InstallmentDto update(@RequestBody InstallmentDto installmentDto) throws CurrencyNotFoundException {
+    public InstallmentDto update(@RequestBody InstallmentDto installmentDto)
+            throws CurrencyNotFoundException, LoanNotFoundException {
         return mapper.mapToDto(service.save(mapper.mapToExistingEntity(installmentDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void create(@RequestBody InstallmentDto installmentDto) throws CurrencyNotFoundException {
+    public void create(@RequestBody InstallmentDto installmentDto)
+            throws CurrencyNotFoundException, LoanNotFoundException {
         service.save(mapper.mapToNewEntity(installmentDto));
     }
 

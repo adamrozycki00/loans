@@ -38,6 +38,7 @@ public class InstallmentService {
     }
 
     public Optional<Installment> findById(Long id) {
+        if (id == null) return Optional.empty();
         return repository.findById(id);
     }
 

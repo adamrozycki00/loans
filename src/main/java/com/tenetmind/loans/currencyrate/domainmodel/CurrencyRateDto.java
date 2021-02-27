@@ -17,4 +17,15 @@ public class CurrencyRateDto {
     private final CurrencyDto currencyDto;
     private final BigDecimal rate;
 
+    @Override
+    public String toString() {
+        return "CurrencyRateDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", date=" + date +
+                ", currencyDto=" + currencyDto +
+                ", rate=" + rate +
+                '}';
+    }
+
 }

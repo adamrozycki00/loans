@@ -25,6 +25,7 @@ public class InterestRateService {
     }
 
     public Optional<InterestRate> findById(Long id) {
+        if (id == null) return Optional.empty();
         return repository.findById(id);
     }
 

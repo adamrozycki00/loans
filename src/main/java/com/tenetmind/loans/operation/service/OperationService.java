@@ -46,6 +46,7 @@ public class OperationService {
     }
 
     public Optional<Operation> findById(Long id) {
+        if (id == null) return Optional.empty();
         return repository.findById(id);
     }
 

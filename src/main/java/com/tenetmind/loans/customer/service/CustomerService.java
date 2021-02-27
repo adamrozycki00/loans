@@ -19,6 +19,7 @@ public class CustomerService {
     }
 
     public Optional<Customer> findById(Long id) {
+        if (id == null) return Optional.empty();
         return repository.findById(id);
     }
 

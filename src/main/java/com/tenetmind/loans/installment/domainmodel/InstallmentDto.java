@@ -14,10 +14,23 @@ public class InstallmentDto {
 
     private final Long id;
     private final LocalDate date;
-    private final LoanDto loanDto;
+    private final Long loanId;
     private final Integer number;
     private final CurrencyDto currencyDto;
     private final BigDecimal principal;
     private final BigDecimal interest;
+
+    @Override
+    public String toString() {
+        return "InstallmentDto{" +
+                "id=" + id +
+                ", date=" + date +
+                ", loanId=" + loanId +
+                ", number=" + number +
+                ", currencyDto=" + currencyDto +
+                ", principal=" + principal +
+                ", interest=" + interest +
+                '}';
+    }
 
 }

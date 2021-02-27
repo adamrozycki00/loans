@@ -47,6 +47,7 @@ public class LoanApplicationService {
     }
 
     public Optional<LoanApplication> findById(Long id) {
+        if (id == null) return Optional.empty();
         return repository.findById(id);
     }
 

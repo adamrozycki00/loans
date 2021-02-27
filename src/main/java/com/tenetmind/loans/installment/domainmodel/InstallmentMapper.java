@@ -1,10 +1,13 @@
 package com.tenetmind.loans.installment.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.CurrencyMapper;
+import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.LoanMapper;
+import com.tenetmind.loans.loan.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,25 +15,28 @@ import java.util.stream.Collectors;
 public class InstallmentMapper {
 
     @Autowired
+    private CurrencyMapper currencyMapper;
+
+    @Autowired
     private LoanMapper loanMapper;
 
     @Autowired
-    private CurrencyMapper currencyMapper;
+    private LoanService loanService;
 
-    public Installment mapToNewEntity(final InstallmentDto dto) {
+    public Installment mapToNewEntity(final InstallmentDto dto) throws LoanNotFoundException {
         return new Installment(
                 dto.getDate(),
-                loanMapper.mapToExistingEntity(dto.getLoanDto()),
+                loanService.findById(dto.getLoanId()).orElseThrow(LoanNotFoundException::new),
                 dto.getNumber(),
                 dto.getPrincipal(),
                 dto.getInterest());
     }
 
-    public Installment mapToExistingEntity(final InstallmentDto dto) {
+    public Installment mapToExistingEntity(final InstallmentDto dto) throws LoanNotFoundException {
         return new Installment(
                 dto.getId(),
                 dto.getDate(),
-                loanMapper.mapToExistingEntity(dto.getLoanDto()),
+                loanService.findById(dto.getLoanId()).orElseThrow(LoanNotFoundException::new),
                 dto.getNumber(),
                 currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getPrincipal(),
@@ -41,7 +47,7 @@ public class InstallmentMapper {
         return new InstallmentDto(
                 entity.getId(),
                 entity.getDate(),
-                loanMapper.mapToDto(entity.getLoan()),
+                entity.getLoan().getId(),
                 entity.getNumber(),
                 currencyMapper.mapToDto(entity.getCurrency()),
                 entity.getPrincipal(),
@@ -54,10 +60,17 @@ public class InstallmentMapper {
                 .collect(Collectors.toList());
     }
 
-    public List<Installment> mapToEntityList(final List<InstallmentDto> installmentDtos) {
-        return installmentDtos.stream()
-                .map(this::mapToExistingEntity)
-                .collect(Collectors.toList());
+    public List<Installment> mapToEntityList (final List<InstallmentDto> installmentDtos){
+        List<Installment> list = new ArrayList<>();
+        try {
+            for (InstallmentDto installmentDto : installmentDtos) {
+                Installment mapToExistingEntity = mapToExistingEntity(installmentDto);
+                list.add(mapToExistingEntity);
+            }
+        } catch (LoanNotFoundException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

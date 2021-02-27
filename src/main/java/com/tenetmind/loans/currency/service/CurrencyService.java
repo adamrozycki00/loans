@@ -19,6 +19,7 @@ public class CurrencyService {
     }
 
     public Optional<Currency> findById(Long id) {
+        if (id == null) return Optional.empty();
         return repository.findById(id);
     }
 

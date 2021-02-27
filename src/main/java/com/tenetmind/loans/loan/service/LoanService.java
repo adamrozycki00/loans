@@ -50,6 +50,7 @@ public class LoanService {
     }
 
     public Optional<Loan> findById(Long id) {
+        if (id == null) return Optional.empty();
         return repository.findById(id);
     }
 
@@ -61,11 +62,6 @@ public class LoanService {
             CurrencyNotFoundException, LoanApplicationNotFoundException {
         if (!validateStatus(loan.getStatus())) {
             throw new InvalidLoanStatusException();
-        }
-
-        if (loan.getStatus().equals(NEW) && loan.getSchedule().isEmpty()) {
-            loan = repository.save(loan);
-            installmentService.makeInitialSchedule(loan);
         }
 
         LoanApplication application = loan.getApplication();
@@ -90,6 +86,11 @@ public class LoanService {
             loan.setCurrency(retrievedCurrency.get());
         } else {
             throw new CurrencyNotFoundException();
+        }
+
+        if (loan.getStatus().equals(NEW) && loan.getSchedule().isEmpty()) {
+            loan = repository.save(loan);
+            installmentService.makeInitialSchedule(loan);
         }
 
         return repository.save(loan);
