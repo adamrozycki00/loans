@@ -16,6 +16,8 @@ import java.util.Optional;
 @Service
 public class NbpService {
 
+    public static final String NAME = "NBP";
+
     @Autowired
     private CurrencyRateRepository repository;
 
@@ -31,7 +33,7 @@ public class NbpService {
         if (fromNbp.isPresent()) {
             Currency currency = currencyService.find(fromNbp.get().getCurrency().getName())
                     .orElseThrow(CurrencyNotFoundException::new);
-            Optional<CurrencyRate> rateOptional = repository.findByNameAndDateAndCurrency("NBP", date, currency);
+            Optional<CurrencyRate> rateOptional = repository.findByNameAndDateAndCurrency(NAME, date, currency);
             if (rateOptional.isEmpty()) {
                 fromNbp.get().setCurrency(currency);
                 repository.save(fromNbp.get());
@@ -50,7 +52,7 @@ public class NbpService {
 
         if (nbpRate.isPresent()) {
             BigDecimal rate = new BigDecimal(nbpRate.get().getRates().get(0).getMid());
-            CurrencyRate currencyRate = new CurrencyRate("NBP", date, currency.get(), rate);
+            CurrencyRate currencyRate = new CurrencyRate(NAME, date, currency.get(), rate);
             return Optional.of(currencyRate);
         } else {
             return Optional.empty();

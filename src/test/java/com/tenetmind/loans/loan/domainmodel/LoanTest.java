@@ -1,7 +1,9 @@
 package com.tenetmind.loans.loan.domainmodel;
 
+import com.tenetmind.loans.application.controller.LoanApplicationNotFoundException;
 import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
 import com.tenetmind.loans.application.service.LoanApplicationService;
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.customer.domainmodel.Customer;
@@ -63,7 +65,8 @@ public class LoanTest {
     }
 
     @Test
-    public void shouldCreateLoan() throws InvalidLoanStatusException, InvalidApplicationStatusException {
+    public void shouldCreateLoan() throws InvalidLoanStatusException, InvalidApplicationStatusException,
+            LoanApplicationNotFoundException, CurrencyNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
@@ -86,7 +89,8 @@ public class LoanTest {
     }
 
     @Test
-    public void shouldDeleteLoanAndNotDeleteCustomer() throws InvalidLoanStatusException, InvalidApplicationStatusException {
+    public void shouldDeleteLoanAndNotDeleteCustomer() throws InvalidLoanStatusException,
+            InvalidApplicationStatusException, LoanApplicationNotFoundException, CurrencyNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
@@ -112,7 +116,8 @@ public class LoanTest {
     }
 
     @Test
-    public void shouldDeleteLoanAndNotDeleteCurrency() throws InvalidLoanStatusException, InvalidApplicationStatusException {
+    public void shouldDeleteLoanAndNotDeleteCurrency() throws InvalidLoanStatusException,
+            InvalidApplicationStatusException, LoanApplicationNotFoundException, CurrencyNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);

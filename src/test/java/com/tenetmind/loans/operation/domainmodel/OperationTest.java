@@ -1,5 +1,6 @@
 package com.tenetmind.loans.operation.domainmodel;
 
+import com.tenetmind.loans.application.controller.LoanApplicationNotFoundException;
 import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
 import com.tenetmind.loans.application.service.LoanApplicationService;
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
@@ -86,7 +87,7 @@ public class OperationTest {
     }
 
     @Test
-    public void shouldCreateOperation() {
+    public void shouldCreateOperation() throws CurrencyNotFoundException, LoanNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
@@ -175,7 +176,7 @@ public class OperationTest {
     @Test
     public void shouldChangeLoanBalanceAfterMakingLoan() throws InvalidLoanStatusException,
             InvalidApplicationStatusException, LoanNotFoundException, CurrencyNotFoundException,
-            CurrencyRateConversionException {
+            CurrencyRateConversionException, LoanApplicationNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
@@ -206,7 +207,7 @@ public class OperationTest {
     @Test
     public void shouldChangeLoanStatusAfterMakingLoan() throws InvalidLoanStatusException,
             InvalidApplicationStatusException, LoanNotFoundException, CurrencyNotFoundException,
-            CurrencyRateConversionException {
+            CurrencyRateConversionException, LoanApplicationNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
@@ -237,7 +238,7 @@ public class OperationTest {
     @Test
     public void shouldChangeLoanBalanceAfterPayingInstallment() throws InvalidLoanStatusException,
             InvalidApplicationStatusException, PaymentAmountException, LoanNotFoundException,
-            CurrencyNotFoundException, CurrencyRateConversionException {
+            CurrencyNotFoundException, CurrencyRateConversionException, LoanApplicationNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
@@ -275,7 +276,7 @@ public class OperationTest {
     @Test
     public void shouldChangeLoanAmountToPayAfterPayingInstallment() throws InvalidLoanStatusException,
             InvalidApplicationStatusException, PaymentAmountException, LoanNotFoundException,
-            CurrencyNotFoundException, CurrencyRateConversionException {
+            CurrencyNotFoundException, CurrencyRateConversionException, LoanApplicationNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);

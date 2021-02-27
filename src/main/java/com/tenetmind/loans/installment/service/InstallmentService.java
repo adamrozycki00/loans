@@ -1,5 +1,10 @@
 package com.tenetmind.loans.installment.service;
 
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
+import com.tenetmind.loans.currency.domainmodel.Currency;
+import com.tenetmind.loans.currency.service.CurrencyService;
+import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
+import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import com.tenetmind.loans.installment.domainmodel.Installment;
 import com.tenetmind.loans.installment.repository.InstallmentRepository;
 import com.tenetmind.loans.installment.service.interestcalc.InterestCalc;
@@ -23,6 +28,9 @@ public class InstallmentService {
     private InstallmentRepository repository;
 
     @Autowired
+    private CurrencyService currencyService;
+
+    @Autowired
     private InterestCalc interestCalc;
 
     public List<Installment> findAll() {
@@ -33,7 +41,16 @@ public class InstallmentService {
         return repository.findById(id);
     }
 
-    public Installment save(Installment installment) {
+    public Installment save(Installment installment) throws CurrencyNotFoundException {
+
+        Currency currency = installment.getCurrency();
+        Optional<Currency> retrievedCurrency = currencyService.find(currency.getName());
+        if (retrievedCurrency.isPresent()) {
+            installment.setCurrency(retrievedCurrency.get());
+        } else {
+            throw new CurrencyNotFoundException();
+        }
+
         return repository.save(installment);
     }
 
@@ -41,7 +58,7 @@ public class InstallmentService {
         repository.deleteById(id);
     }
 
-    public void makeInitialSchedule(Loan loan) {
+    public void makeInitialSchedule(Loan loan) throws CurrencyNotFoundException {
         int loanPeriod = loan.getPeriod();
         BigDecimal loanBalance = loan.getAmount();
         BigDecimal interestRate = loan.getBaseRate().add(loan.getMarginRate());

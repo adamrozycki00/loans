@@ -1,5 +1,7 @@
 package com.tenetmind.loans.operation.controller;
 
+import com.tenetmind.loans.application.controller.LoanApplicationNotFoundException;
+import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currencyrate.converter.CurrencyRateConversionException;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
@@ -50,24 +52,28 @@ public class OperationController {
     }
 
     @RequestMapping(value = "", method = PUT)
-    public OperationDto update(@RequestBody OperationDto operationDto) {
+    public OperationDto update(@RequestBody OperationDto operationDto)
+            throws CurrencyNotFoundException, LoanNotFoundException {
         return mapper.mapToDto(service.save(mapper.mapToExistingEntity(operationDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void create(@RequestBody OperationDto operationDto) {
+    public void create(@RequestBody OperationDto operationDto)
+            throws CurrencyNotFoundException, LoanNotFoundException {
         service.save(mapper.mapToNewEntity(operationDto));
     }
 
     @RequestMapping(value = "/payments/installment", method = POST, consumes = APPLICATION_JSON_VALUE)
     public void payInstallment(@RequestBody PaymentDto paymentDto) throws PaymentAmountException, LoanNotFoundException,
-            CurrencyNotFoundException, CurrencyRateConversionException, InvalidLoanStatusException {
+            CurrencyNotFoundException, CurrencyRateConversionException, InvalidLoanStatusException,
+            LoanApplicationNotFoundException, InvalidApplicationStatusException {
         service.payInstallment(paymentDto);
     }
 
     @RequestMapping(value = "/payments/loan", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void makeLoan(@RequestBody PaymentDto paymentDto) throws LoanNotFoundException, CurrencyRateConversionException,
-            CurrencyNotFoundException, InvalidLoanStatusException {
+    public void makeLoan(@RequestBody PaymentDto paymentDto) throws LoanNotFoundException,
+            CurrencyRateConversionException, CurrencyNotFoundException, InvalidLoanStatusException,
+            LoanApplicationNotFoundException, InvalidApplicationStatusException {
         service.makeLoan(paymentDto);
     }
 

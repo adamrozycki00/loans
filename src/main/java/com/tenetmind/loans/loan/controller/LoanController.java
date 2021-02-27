@@ -1,5 +1,8 @@
 package com.tenetmind.loans.loan.controller;
 
+import com.tenetmind.loans.application.controller.LoanApplicationNotFoundException;
+import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.LoanDto;
 import com.tenetmind.loans.loan.domainmodel.LoanMapper;
 import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
@@ -45,12 +48,14 @@ public class LoanController {
     }
 
     @RequestMapping(value = "", method = PUT)
-    public LoanDto update(@RequestBody LoanDto loanDto) throws InvalidLoanStatusException {
+    public LoanDto update(@RequestBody LoanDto loanDto) throws InvalidLoanStatusException,
+            CurrencyNotFoundException, LoanApplicationNotFoundException, InvalidApplicationStatusException {
         return mapper.mapToDto(service.save(mapper.mapToExistingEntity(loanDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void create(@RequestBody LoanDto loanDto) throws InvalidLoanStatusException {
+    public void create(@RequestBody LoanDto loanDto) throws InvalidLoanStatusException,
+            CurrencyNotFoundException, LoanApplicationNotFoundException, InvalidApplicationStatusException {
         service.save(mapper.mapToNewEntity(loanDto));
     }
 

@@ -10,11 +10,12 @@ import java.time.LocalDate;
 public class LoansApp {
 
     public static void main(String[] args) {
+        SpringApplication.run(LoansApp.class, args);
+
 //        ((CurrencyRateService)
-                SpringApplication.run(LoansApp.class, args)
+//                SpringApplication.run(LoansApp.class, args)
 //                .getBean("currencyRateService"))
-//                .populateCurrencyRates(LocalDate.of(2021, 1, 1))
-        ;
+//                .populateCurrencyRates(LocalDate.of(2021, 1, 1));
     }
 
 }

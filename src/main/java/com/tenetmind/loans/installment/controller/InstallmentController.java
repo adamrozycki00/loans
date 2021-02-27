@@ -1,5 +1,6 @@
 package com.tenetmind.loans.installment.controller;
 
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.installment.domainmodel.InstallmentDto;
 import com.tenetmind.loans.installment.domainmodel.InstallmentMapper;
 import com.tenetmind.loans.installment.service.InstallmentService;
@@ -44,12 +45,12 @@ public class InstallmentController {
     }
 
     @RequestMapping(value = "", method = PUT)
-    public InstallmentDto update(@RequestBody InstallmentDto installmentDto) {
+    public InstallmentDto update(@RequestBody InstallmentDto installmentDto) throws CurrencyNotFoundException {
         return mapper.mapToDto(service.save(mapper.mapToExistingEntity(installmentDto)));
     }
 
     @RequestMapping(value = "", method = POST, consumes = APPLICATION_JSON_VALUE)
-    public void create(@RequestBody InstallmentDto installmentDto) {
+    public void create(@RequestBody InstallmentDto installmentDto) throws CurrencyNotFoundException {
         service.save(mapper.mapToNewEntity(installmentDto));
     }
 

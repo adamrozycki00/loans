@@ -17,6 +17,8 @@ import java.util.Optional;
 @Service
 public class BloombergService {
 
+    public static final String NAME = "Bloomberg";
+
     @Autowired
     private CurrencyRateRepository repository;
 
@@ -33,12 +35,12 @@ public class BloombergService {
                     try {
                         Currency currency = currencyService.find(rate.getCurrency().getName())
                                 .orElseThrow(CurrencyNotFoundException::new);
-                        Optional<CurrencyRate> rateOptional =
-                                repository.findByNameAndDateAndCurrency("Bloomberg", LocalDate.now(), currency);
-                        if (rateOptional.isPresent()) {
-                            CurrencyRate updatedRate = rateOptional.get();
-                            updatedRate.setRate(rate.getRate());
-                            repository.save(updatedRate);
+                        Optional<CurrencyRate> retrievedCurrencyRate =
+                                repository.findByNameAndDateAndCurrency(NAME, LocalDate.now(), currency);
+                        if (retrievedCurrencyRate.isPresent()) {
+                            CurrencyRate rateOnUpdate = retrievedCurrencyRate.get();
+                            rateOnUpdate.setRate(rate.getRate());
+                            repository.save(rateOnUpdate);
                         } else {
                             rate.setCurrency(currency);
                             repository.save(rate);
@@ -60,9 +62,9 @@ public class BloombergService {
 
             LocalDate today = LocalDate.now();
 
-            CurrencyRate eur = new CurrencyRate("Bloomberg", today, new Currency("eur"), eurPlnRate);
-            CurrencyRate usd = new CurrencyRate("Bloomberg", today, new Currency("usd"), usdPlnRate);
-            CurrencyRate gbp = new CurrencyRate("Bloomberg", today, new Currency("gbp"), gbpPlnRate);
+            CurrencyRate eur = new CurrencyRate(NAME, today, new Currency("eur"), eurPlnRate);
+            CurrencyRate usd = new CurrencyRate(NAME, today, new Currency("usd"), usdPlnRate);
+            CurrencyRate gbp = new CurrencyRate(NAME, today, new Currency("gbp"), gbpPlnRate);
 
             return Optional.of(List.of(eur, usd, gbp));
         } else {

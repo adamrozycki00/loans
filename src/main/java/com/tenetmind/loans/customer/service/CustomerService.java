@@ -23,11 +23,15 @@ public class CustomerService {
     }
 
     public Customer save(Customer customer) {
-        return repository.save(customer);
+        Optional<Customer> retrievedCustomer = find(customer.getPesel());
+        return retrievedCustomer.orElseGet(() -> repository.save(customer));
     }
 
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
 
+    public Optional<Customer> find(String pesel) {
+        return repository.findByPesel(pesel);
+    }
 }

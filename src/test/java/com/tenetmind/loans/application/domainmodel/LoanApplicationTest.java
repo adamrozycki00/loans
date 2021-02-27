@@ -1,6 +1,8 @@
 package com.tenetmind.loans.application.domainmodel;
 
+import com.tenetmind.loans.application.controller.LoanApplicationNotFoundException;
 import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.customer.domainmodel.Customer;
@@ -58,7 +60,8 @@ public class LoanApplicationTest {
     }
 
     @Test
-    public void shouldCreateLoanApplication() throws InvalidApplicationStatusException, InvalidLoanStatusException {
+    public void shouldCreateLoanApplication() throws InvalidApplicationStatusException, InvalidLoanStatusException,
+            LoanApplicationNotFoundException, CurrencyNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
@@ -121,7 +124,7 @@ public class LoanApplicationTest {
 
     @Test
     public void shouldCreateLoanAfterAcceptingApplication() throws InvalidLoanStatusException,
-            InvalidApplicationStatusException {
+            InvalidApplicationStatusException, LoanApplicationNotFoundException, CurrencyNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);

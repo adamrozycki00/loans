@@ -1,7 +1,13 @@
 package com.tenetmind.loans.application.service;
 
+import com.tenetmind.loans.application.controller.LoanApplicationNotFoundException;
 import com.tenetmind.loans.application.domainmodel.LoanApplication;
 import com.tenetmind.loans.application.repository.LoanApplicationRepository;
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
+import com.tenetmind.loans.currency.domainmodel.Currency;
+import com.tenetmind.loans.currency.service.CurrencyService;
+import com.tenetmind.loans.customer.domainmodel.Customer;
+import com.tenetmind.loans.customer.service.CustomerService;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
 import com.tenetmind.loans.loan.service.LoanService;
@@ -30,6 +36,12 @@ public class LoanApplicationService {
     @Autowired
     private LoanService loanService;
 
+    @Autowired
+    private CurrencyService currencyService;
+
+    @Autowired
+    private CustomerService customerService;
+
     public List<LoanApplication> findAll() {
         return repository.findAll();
     }
@@ -39,9 +51,25 @@ public class LoanApplicationService {
     }
 
     public LoanApplication save(LoanApplication application) throws InvalidApplicationStatusException,
-            InvalidLoanStatusException {
+            InvalidLoanStatusException, CurrencyNotFoundException, LoanApplicationNotFoundException {
         if (!validateStatus(application.getStatus())) {
             throw new InvalidApplicationStatusException();
+        }
+
+        Currency currency = application.getCurrency();
+        Optional<Currency> retrievedCurrency = currencyService.find(currency.getName());
+        if (retrievedCurrency.isPresent()) {
+            application.setCurrency(retrievedCurrency.get());
+        } else {
+            throw new CurrencyNotFoundException();
+        }
+
+        Customer customer = application.getCustomer();
+        Optional<Customer> retrievedCustomer = customerService.find(customer.getPesel());
+        if (retrievedCustomer.isPresent()) {
+            application.setCustomer(retrievedCustomer.get());
+        } else {
+            customerService.save(customer);
         }
 
         LoanApplication savedApplication = repository.save(application);

@@ -1,5 +1,6 @@
 package com.tenetmind.loans.installment.domainmodel;
 
+import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.customer.domainmodel.Customer;
@@ -65,7 +66,7 @@ public class InstallmentTest {
     }
 
     @Test
-    public void shouldCreateInstallment() {
+    public void shouldCreateInstallment() throws CurrencyNotFoundException {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         customerRepository.save(customer);
