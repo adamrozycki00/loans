@@ -32,11 +32,7 @@ public class NbpService {
             Currency currency = currencyService.find(fromNbp.get().getCurrency().getName())
                     .orElseThrow(CurrencyNotFoundException::new);
             Optional<CurrencyRate> rateOptional = repository.findByNameAndDateAndCurrency("NBP", date, currency);
-            if (rateOptional.isPresent()) {
-                CurrencyRate updatedRate = rateOptional.get();
-                updatedRate.setRate(fromNbp.get().getRate());
-                repository.save(updatedRate);
-            } else {
+            if (rateOptional.isEmpty()) {
                 fromNbp.get().setCurrency(currency);
                 repository.save(fromNbp.get());
             }
