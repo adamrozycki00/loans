@@ -14,7 +14,7 @@ public class OperationDto {
 
     private final Long id;
     private final LocalDate date;
-    private final LoanDto loanDto;
+    private final Long loanId;
     private final String type;
     private final CurrencyDto currencyDto;
     private final BigDecimal amount;
@@ -25,7 +25,7 @@ public class OperationDto {
         return "OperationDto{" +
                 "id=" + id +
                 ", date=" + date +
-                ", loanDto=" + loanDto +
+                ", loanId=" + loanId +
                 ", type='" + type + '\'' +
                 ", currencyDto=" + currencyDto +
                 ", amount=" + amount +

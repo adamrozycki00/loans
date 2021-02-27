@@ -15,13 +15,10 @@ import java.util.stream.Collectors;
 public class InstallmentMapper {
 
     @Autowired
-    private CurrencyMapper currencyMapper;
-
-    @Autowired
-    private LoanMapper loanMapper;
-
-    @Autowired
     private LoanService loanService;
+
+    @Autowired
+    private CurrencyMapper currencyMapper;
 
     public Installment mapToNewEntity(final InstallmentDto dto) throws LoanNotFoundException {
         return new Installment(
@@ -61,16 +58,16 @@ public class InstallmentMapper {
     }
 
     public List<Installment> mapToEntityList (final List<InstallmentDto> installmentDtos){
-        List<Installment> list = new ArrayList<>();
+        List<Installment> resultList = new ArrayList<>();
         try {
             for (InstallmentDto installmentDto : installmentDtos) {
-                Installment mapToExistingEntity = mapToExistingEntity(installmentDto);
-                list.add(mapToExistingEntity);
+                Installment existingEntity = mapToExistingEntity(installmentDto);
+                resultList.add(existingEntity);
             }
         } catch (LoanNotFoundException e) {
             e.printStackTrace();
         }
-        return list;
+        return resultList;
     }
 
 }

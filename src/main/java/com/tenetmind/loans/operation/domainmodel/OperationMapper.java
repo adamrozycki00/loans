@@ -1,10 +1,15 @@
 package com.tenetmind.loans.operation.domainmodel;
 
 import com.tenetmind.loans.currency.domainmodel.CurrencyMapper;
+import com.tenetmind.loans.installment.domainmodel.Installment;
+import com.tenetmind.loans.installment.domainmodel.InstallmentDto;
+import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.LoanMapper;
+import com.tenetmind.loans.loan.service.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,26 +17,26 @@ import java.util.stream.Collectors;
 public class OperationMapper {
 
     @Autowired
-    private LoanMapper loanMapper;
+    private LoanService loanService;
 
     @Autowired
     private CurrencyMapper currencyMapper;
 
-    public Operation mapToNewEntity(final OperationDto dto) {
+    public Operation mapToNewEntity(final OperationDto dto) throws LoanNotFoundException {
         return new Operation(
                 dto.getDate(),
-                loanMapper.mapToExistingEntity(dto.getLoanDto()),
+                loanService.findById(dto.getLoanId()).orElseThrow(LoanNotFoundException::new),
                 dto.getType(),
                 currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getAmount(),
                 dto.getPlnAmount());
     }
 
-    public Operation mapToExistingEntity(final OperationDto dto) {
+    public Operation mapToExistingEntity(final OperationDto dto) throws LoanNotFoundException {
         return new Operation(
                 dto.getId(),
                 dto.getDate(),
-                loanMapper.mapToExistingEntity(dto.getLoanDto()),
+                loanService.findById(dto.getLoanId()).orElseThrow(LoanNotFoundException::new),
                 dto.getType(),
                 currencyMapper.mapToExistingEntity(dto.getCurrencyDto()),
                 dto.getAmount(),
@@ -42,7 +47,7 @@ public class OperationMapper {
         return new OperationDto(
                 entity.getId(),
                 entity.getDate(),
-                loanMapper.mapToDto(entity.getLoan()),
+                entity.getLoan().getId(),
                 entity.getType(),
                 currencyMapper.mapToDto(entity.getCurrency()),
                 entity.getAmount(),
@@ -56,9 +61,16 @@ public class OperationMapper {
     }
 
     public List<Operation> mapToEntityList(final List<OperationDto> operationDtos) {
-        return operationDtos.stream()
-                .map(this::mapToExistingEntity)
-                .collect(Collectors.toList());
+        List<Operation> resultList = new ArrayList<>();
+        try {
+            for (OperationDto operationDto : operationDtos) {
+                Operation existingEntity = mapToExistingEntity(operationDto);
+                resultList.add(existingEntity);
+            }
+        } catch (LoanNotFoundException e) {
+            e.printStackTrace();
+        }
+        return resultList;
     }
 
 }
