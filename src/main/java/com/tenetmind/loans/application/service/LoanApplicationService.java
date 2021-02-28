@@ -25,10 +25,8 @@ public class LoanApplicationService {
 
     private final String NEW = "New";
     private final String ACCEPTED = "Accepted";
-    private final String DENIED = "Denied";
-    private final String CANCELED = "Canceled";
 
-    private final List<String> statusList = List.of(NEW, ACCEPTED, DENIED, CANCELED);
+    private final List<String> statusList = List.of(NEW, ACCEPTED);
 
     @Autowired
     private LoanApplicationRepository repository;

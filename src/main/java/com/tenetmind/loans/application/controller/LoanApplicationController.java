@@ -1,5 +1,6 @@
 package com.tenetmind.loans.application.controller;
 
+import com.tenetmind.loans.application.domainmodel.LoanApplication;
 import com.tenetmind.loans.application.domainmodel.LoanApplicationDto;
 import com.tenetmind.loans.application.domainmodel.LoanApplicationMapper;
 import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -39,9 +41,10 @@ public class LoanApplicationController {
 
     @RequestMapping(value = "/{id}", method = DELETE)
     public void delete(@PathVariable Long id) throws LoanApplicationNotFoundException {
-        try {
+        Optional<LoanApplication> loanApplication = service.findById(id);
+        if (loanApplication.isPresent()) {
             service.deleteById(id);
-        } catch (Exception e) {
+        } else {
             throw new LoanApplicationNotFoundException();
         }
     }
