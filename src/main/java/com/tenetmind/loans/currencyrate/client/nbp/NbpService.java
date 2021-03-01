@@ -4,17 +4,18 @@ import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currencyrate.client.CurrencyRateClient;
+import com.tenetmind.loans.currencyrate.client.CurrencyRateClientService;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
-public class NbpService {
+public class NbpService extends CurrencyRateClientService {
 
     public static final String NAME = "NBP";
 
@@ -24,38 +25,22 @@ public class NbpService {
     @Autowired
     private CurrencyService currencyService;
 
-    @Autowired
-    private CurrencyRateClient rateClient;
+    @Qualifier("nbpClient")
+    protected void setClient(CurrencyRateClient client) {
+        this.client = client;
+    }
 
-    public void getNewNbpRateAndSave(String currencyName, LocalDate date)
-            throws CurrencyNotFoundException {
-        Optional<CurrencyRate> fromNbp = getFromNbp(currencyName, date);
+    @Override
+    public void getAndSave(String currencyName, LocalDate date) throws CurrencyNotFoundException {
+        Optional<CurrencyRate> fromNbp = client.getCurrencyRate(currencyName, date);
         if (fromNbp.isPresent()) {
             Currency currency = currencyService.find(fromNbp.get().getCurrency().getName())
                     .orElseThrow(CurrencyNotFoundException::new);
-            Optional<CurrencyRate> rateOptional = repository.findByNameAndDateAndCurrency(NAME, date, currency);
-            if (rateOptional.isEmpty()) {
+            Optional<CurrencyRate> retrievedRate = repository.findByNameAndDateAndCurrency(NAME, date, currency);
+            if (retrievedRate.isEmpty()) {
                 fromNbp.get().setCurrency(currency);
                 repository.save(fromNbp.get());
             }
-        }
-    }
-
-    private Optional<CurrencyRate> getFromNbp(String currencyName, LocalDate date)
-            throws CurrencyNotFoundException {
-        Optional<Currency> currency = currencyService.find(currencyName);
-
-        if (currency.isEmpty())
-            throw new CurrencyNotFoundException();
-
-        Optional<NbpRatesDto> nbpRate = rateClient.getNbpRates(currencyName, date.toString());
-
-        if (nbpRate.isPresent()) {
-            BigDecimal rate = new BigDecimal(nbpRate.get().getRates().get(0).getMid());
-            CurrencyRate currencyRate = new CurrencyRate(NAME, date, currency.get(), rate);
-            return Optional.of(currencyRate);
-        } else {
-            return Optional.empty();
         }
     }
 

@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 public class BloombergResultDto {
 
     @JsonProperty("EURPLN:cur")
-    private BloombergSingleRateDetailsDto eurPlnRate;
+    private BloombergSingleRateDto eurPlnRate;
 
     @JsonProperty("USDPLN:cur")
-    private BloombergSingleRateDetailsDto usdPlnRate;
+    private BloombergSingleRateDto usdPlnRate;
 
     @JsonProperty("GBPPLN:cur")
-    private BloombergSingleRateDetailsDto gbpPlnRate;
+    private BloombergSingleRateDto gbpPlnRate;
 
     @Override
     public String toString() {
@@ -29,4 +29,5 @@ public class BloombergResultDto {
                 ", gbpPlnRate=" + gbpPlnRate +
                 '}';
     }
+
 }

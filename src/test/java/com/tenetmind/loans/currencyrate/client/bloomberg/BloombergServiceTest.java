@@ -47,7 +47,7 @@ public class BloombergServiceTest {
         int sizeBefore = currencyRateRepository.findAll().size();
 
         //when
-        service.getNewBloombergRateAndSave();
+        service.getNewBloombergRateAndSaveOrUpdate();
         int sizeAfter = currencyRateRepository.findAll().size();
 
         //then

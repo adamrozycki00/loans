@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CurrencyRateConfiguration {
+public class CurrencyRateClientConfiguration {
 
     @Value("http://api.nbp.pl/api/exchangerates/rates/A/")
     private String nbpApiEndpoint;
@@ -33,4 +33,5 @@ public class CurrencyRateConfiguration {
     public String getRapidApiHost() {
         return rapidApiHost;
     }
+
 }

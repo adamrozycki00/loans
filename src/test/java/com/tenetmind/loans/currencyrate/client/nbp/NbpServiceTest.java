@@ -49,7 +49,7 @@ public class NbpServiceTest {
         int sizeBefore = currencyRateRepository.findAll().size();
 
         //when
-        service.getNewNbpRateAndSave("GBP", LocalDate.of(2021, 2, 25));
+        service.getNbpRateAndSave("GBP", LocalDate.of(2021, 2, 25));
         int sizeAfter = currencyRateRepository.findAll().size();
 
         //then
