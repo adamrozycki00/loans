@@ -2,8 +2,9 @@ package com.tenetmind.loans.currencyrate.service;
 
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.currency.service.CurrencyService;
-import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -30,6 +30,18 @@ public class CurrencyRateServiceTest {
 
     @Autowired
     private CurrencyRepository currencyRepository;
+
+    @Before
+    public void setUp() {
+        repository.deleteAll();
+        currencyRepository.deleteAll();
+    }
+
+    @After
+    public void cleanUp() {
+        repository.deleteAll();
+        currencyRepository.deleteAll();
+    }
 
     @Test
     public void shouldAddTodaysCurrencyRates() {

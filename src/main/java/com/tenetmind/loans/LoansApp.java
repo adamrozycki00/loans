@@ -10,8 +10,6 @@ import java.time.LocalDate;
 public class LoansApp {
 
     public static void main(String[] args) {
-        SpringApplication.run(LoansApp.class, args);
-
         ((CurrencyRateService)
                 SpringApplication.run(LoansApp.class, args)
                 .getBean("currencyRateService"))

@@ -56,4 +56,9 @@ public class CurrencyRateController {
         service.save(mapper.mapToNewEntity(currencyRateDto));
     }
 
+    @RequestMapping(value = "/uptodate/{currencyName}", method = POST)
+    public Boolean create(@PathVariable String currencyName) throws CurrencyNotFoundException {
+        return service.checkForUpToDateRate(currencyName);
+    }
+
 }

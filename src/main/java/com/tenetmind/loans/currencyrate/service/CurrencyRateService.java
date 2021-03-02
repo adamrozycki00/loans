@@ -55,6 +55,18 @@ public class CurrencyRateService {
         repository.deleteById(id);
     }
 
+    public boolean checkForUpToDateRate(String currencyName) throws CurrencyNotFoundException {
+        addTodaysRates();
+
+        Optional<Currency> retrievedCurrency = currencyService.find(currencyName);
+        if (retrievedCurrency.isEmpty()) {
+            throw new CurrencyNotFoundException();
+        }
+
+        List<CurrencyRate> todaysRate = repository.findByDateAndCurrency(LocalDate.now(), retrievedCurrency.get());
+        return !todaysRate.isEmpty();
+    }
+
     public void addTodaysRates() {
         currencyService.getNamesOfMainCurrencies()
                 .forEach(name -> {
@@ -66,7 +78,6 @@ public class CurrencyRateService {
                     }
                 });
     }
-
 
     public void prepareDatabase(LocalDate startingDate) {
         currencyService.populateWithMainCurrencies();
