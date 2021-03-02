@@ -2,20 +2,25 @@ package com.tenetmind.loans.currencyrate.client.nbp;
 
 import com.tenetmind.loans.currencyrate.client.CurrencyRateClient;
 import com.tenetmind.loans.currencyrate.client.CurrencyRateClientService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
 public class NbpService extends CurrencyRateClientService {
 
+    @Autowired
+    @Qualifier("nbpClient")
+    private CurrencyRateClient client;
+
     @Override
-    protected void setName(String name) {
-        this.name = "NBP";
+    public String getName() {
+        return  "NBP";
     }
 
-    @Qualifier("nbpClient")
-    protected void setClient(CurrencyRateClient client) {
-        this.client = client;
+    @Override
+    public CurrencyRateClient getClient() {
+        return client;
     }
 
 }

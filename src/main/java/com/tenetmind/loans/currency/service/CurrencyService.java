@@ -36,4 +36,18 @@ public class CurrencyService {
         repository.deleteById(id);
     }
 
+    public List<String> getNamesOfMainCurrencies() {
+        return List.of("EUR", "USD", "GBP");
+    }
+
+    public void populateWithMainCurrencies() {
+        getNamesOfMainCurrencies()
+                .forEach(name -> {
+                    Optional<Currency> currencyRetrievedByName = repository.findByName(name);
+                    if (currencyRetrievedByName.isEmpty()) {
+                        repository.save(new Currency(name));
+                    }
+                });
+    }
+
 }

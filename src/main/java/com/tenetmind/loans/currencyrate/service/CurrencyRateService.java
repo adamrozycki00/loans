@@ -55,38 +55,40 @@ public class CurrencyRateService {
         repository.deleteById(id);
     }
 
+    public void addTodaysRates() {
+        currencyService.getNamesOfMainCurrencies()
+                .forEach(name -> {
+                    try {
+                        nbpService.getAndSave(name);
+                        bloombergService.getAndSave(name);
+                    } catch (CurrencyNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                });
+    }
+
+
     public void prepareDatabase(LocalDate startingDate) {
-        List<Currency> currencies = populateCurrencies();
+        currencyService.populateWithMainCurrencies();
 
-        currencies.forEach(currency -> {
-            String currencyName = currency.getName();
+        List<String> currencyNames = currencyService.getNamesOfMainCurrencies();
 
+        currencyNames.forEach(currency -> {
             startingDate.datesUntil(LocalDate.now().plusDays(1))
                     .forEach(date -> {
                         try {
-                            nbpService.getAndSave(currencyName, date);
+                            nbpService.getAndSave(currency, date);
                         } catch (CurrencyNotFoundException e) {
                             e.printStackTrace();
                         }
                     });
 
             try {
-                bloombergService.getAndSave(currencyName);
+                bloombergService.getAndSave(currency);
             } catch (CurrencyNotFoundException e) {
                 e.printStackTrace();
             }
         });
-    }
-
-    private List<Currency> populateCurrencies() {
-        List<Currency> currencies = Arrays.asList(
-                new Currency("pln"),
-                new Currency("gbp"),
-                new Currency("eur"),
-                new Currency("usd")
-        );
-        currencies.forEach(currencyService::save);
-        return currencies;
     }
 
 }

@@ -14,9 +14,6 @@ import java.util.Optional;
 
 public abstract class CurrencyRateClientService {
 
-    protected String name;
-    protected CurrencyRateClient client;
-
     @Autowired
     private CurrencyRateClientConfiguration config;
 
@@ -29,7 +26,12 @@ public abstract class CurrencyRateClientService {
     @Autowired
     private CurrencyRateRepository repository;
 
+    public abstract CurrencyRateClient getClient();
+
+    public abstract String getName();
+
     public void getAndSave(String currencyName, LocalDate date) throws CurrencyNotFoundException {
+        CurrencyRateClient client = getClient();
         Optional<CurrencyRate> optionalCurrencyRate = getClient().prepareCurrencyRate(currencyName, date);
 
         if (optionalCurrencyRate.isPresent()) {
@@ -51,18 +53,6 @@ public abstract class CurrencyRateClientService {
     public void getAndSave(String currencyName) throws CurrencyNotFoundException {
         getAndSave(currencyName, LocalDate.now());
     }
-
-    public CurrencyRateClient getClient() {
-        return client;
-    }
-
-    protected abstract void setClient(CurrencyRateClient client);
-
-    public String getName() {
-        return name;
-    }
-
-    protected abstract void setName(String name);
 
     public CurrencyRateClientConfiguration getConfig() {
         return config;
