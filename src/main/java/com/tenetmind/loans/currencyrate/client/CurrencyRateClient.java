@@ -8,12 +8,14 @@ import java.util.Optional;
 
 public interface CurrencyRateClient {
 
-    Optional<CurrencyRate> getCurrencyRate(String currencyName, LocalDate date) throws CurrencyNotFoundException;
+    String getName();
 
-    default Optional<CurrencyRate> getCurrencyRate(String currencyName)
+    Optional<CurrencyRate> prepareCurrencyRate(String currencyName, LocalDate date)
+            throws CurrencyNotFoundException;
+
+    default Optional<CurrencyRate> prepareCurrencyRate(String currencyName)
             throws CurrencyNotFoundException {
-        return getCurrencyRate(currencyName, LocalDate.now());
+        return prepareCurrencyRate(currencyName, LocalDate.now());
     }
-
 
 }

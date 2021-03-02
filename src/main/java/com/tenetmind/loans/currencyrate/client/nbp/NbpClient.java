@@ -24,8 +24,6 @@ import static java.util.Optional.ofNullable;
 @Qualifier("nbpClient")
 public class NbpClient implements CurrencyRateClient {
 
-    private static final String NAME = "Bloomberg";
-
     @Autowired
     private CurrencyRateClientConfiguration config;
 
@@ -36,7 +34,7 @@ public class NbpClient implements CurrencyRateClient {
     private CurrencyService currencyService;
 
     @Override
-    public Optional<CurrencyRate> getCurrencyRate(String currencyName, LocalDate date)
+    public Optional<CurrencyRate> prepareCurrencyRate(String currencyName, LocalDate date)
             throws CurrencyNotFoundException {
         Optional<Currency> currency = currencyService.find(currencyName);
 
@@ -47,11 +45,16 @@ public class NbpClient implements CurrencyRateClient {
 
         if (nbpRate.isPresent()) {
             BigDecimal rate = new BigDecimal(nbpRate.get().getRates().get(0).getMid());
-            CurrencyRate currencyRate = new CurrencyRate(NAME, date, currency.get(), rate);
+            CurrencyRate currencyRate = new CurrencyRate(getName(), date, currency.get(), rate);
             return Optional.of(currencyRate);
         } else {
             return Optional.empty();
         }
+    }
+
+    @Override
+    public String getName() {
+        return "NBP";
     }
 
     private Optional<NbpRatesDto> getNbpRates(String code, String date) {

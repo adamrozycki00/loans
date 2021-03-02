@@ -55,22 +55,28 @@ public class CurrencyRateService {
         repository.deleteById(id);
     }
 
-//    public void populateCurrencyRates(LocalDate startingDate) {
-//        List<Currency> currencies = populateCurrencies();
-//
-//        startingDate.datesUntil(LocalDate.now().plusDays(1))
-//                .forEach(date ->
-//                        currencies.forEach(currency -> {
-//                            try {
-//                                nbpService.getNbpRateAndSave(currency.getName(), date);
-//                            } catch (CurrencyNotFoundException e) {
-//                                e.printStackTrace();
-//                            }
-//                        })
-//                );
-//
-//        bloombergService.getNewBloombergRateAndSaveOrUpdate();
-//    }
+    public void prepareDatabase(LocalDate startingDate) {
+        List<Currency> currencies = populateCurrencies();
+
+        currencies.forEach(currency -> {
+            String currencyName = currency.getName();
+
+            startingDate.datesUntil(LocalDate.now().plusDays(1))
+                    .forEach(date -> {
+                        try {
+                            nbpService.getAndSave(currencyName, date);
+                        } catch (CurrencyNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    });
+
+            try {
+                bloombergService.getAndSave(currencyName);
+            } catch (CurrencyNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+    }
 
     private List<Currency> populateCurrencies() {
         List<Currency> currencies = Arrays.asList(
