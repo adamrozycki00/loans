@@ -4,8 +4,6 @@ import com.tenetmind.loans.application.controller.LoanApplicationController;
 import com.tenetmind.loans.currency.controller.CurrencyController;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.domainmodel.CurrencyDto;
-import com.tenetmind.loans.currency.domainmodel.CurrencyMapper;
-import com.tenetmind.loans.currency.service.CurrencyService;
 import com.tenetmind.loans.currencyrate.controller.CurrencyRateController;
 import com.tenetmind.loans.customer.controller.CustomerController;
 import com.tenetmind.loans.installment.controller.InstallmentController;
@@ -15,7 +13,6 @@ import com.tenetmind.loans.interestrate.domainmodel.InterestRateMapper;
 import com.tenetmind.loans.interestrate.service.InterestRateService;
 import com.tenetmind.loans.loan.controller.LoanController;
 import com.tenetmind.loans.operation.controller.OperationController;
-import org.apache.tomcat.jni.Local;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -44,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest
 @RunWith(SpringRunner.class)
 public class InterestRateControllerTest {
-
 
     @Autowired
     private MockMvc mockMvc;
