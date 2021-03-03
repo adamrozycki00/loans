@@ -86,6 +86,24 @@ public class Loan {
         this.operations = new ArrayList<>();
     }
 
+    public Loan(Long id, LocalDateTime date, LoanApplication application, BigDecimal baseRate) {
+        this.id = id;
+        this.date = date;
+        this.application = application;
+        this.customer = application.getCustomer();
+        this.currency = application.getCurrency();
+        this.amount = application.getAmount();
+        this.period = application.getPeriod();
+        this.baseRate = baseRate;
+        this.marginRate = application.getMarginRate();
+        this.balance = BigDecimal.ZERO;
+        this.amountToPay = BigDecimal.ZERO;
+        this.numberOfInstallmentsPaid = 0;
+        this.status = "New";
+        this.schedule = new ArrayList<>();
+        this.operations = new ArrayList<>();
+    }
+
     public void setStatus(String status) {
         this.status = status.substring(0, 1).toUpperCase() + status.substring(1);
     }
