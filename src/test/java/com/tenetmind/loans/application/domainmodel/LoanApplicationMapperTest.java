@@ -126,7 +126,7 @@ public class LoanApplicationMapperTest {
     }
 
     @Test
-    public void shouldCreateDtoWithSamePropertiesAsInputApplication() {
+    public void shouldCreateDtoWithSamePropertiesAsThoseInInputApplication() {
         //given
         Customer customer = new Customer("John", "Smith", "12345");
         CustomerDto customerDto = new CustomerDto(customer.getId(), customer.getFirstName(), customer.getLastName(),
@@ -140,8 +140,6 @@ public class LoanApplicationMapperTest {
         LoanApplication application = new LoanApplication(LocalDateTime.now(), customer, pln,
                 new BigDecimal("1000"), 12, new BigDecimal(".05"));
         repository.save(application);
-
-        System.out.println(">>>>>>>>>>>>> " + application);
 
         LoanApplicationDto applicationDto = new LoanApplicationDto(application.getId(), application.getDate(),
                 customerDto, plnDto, application.getAmount(), application.getPeriod(), application.getMarginRate(),
