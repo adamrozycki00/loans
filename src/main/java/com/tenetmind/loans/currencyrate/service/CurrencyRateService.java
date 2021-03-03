@@ -8,6 +8,7 @@ import com.tenetmind.loans.currencyrate.client.nbp.NbpService;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -67,6 +68,7 @@ public class CurrencyRateService {
         return !todaysRate.isEmpty();
     }
 
+    @Scheduled(cron = "0 0/30 * * * *")
     public void addTodaysRates() {
         currencyService.getNamesOfMainCurrencies()
                 .forEach(name -> {
