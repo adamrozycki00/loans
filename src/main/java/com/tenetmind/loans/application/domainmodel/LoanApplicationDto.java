@@ -21,18 +21,4 @@ public class LoanApplicationDto {
     private final BigDecimal marginRate;
     private final String status;
 
-    @Override
-    public String toString() {
-        return "LoanApplicationDto{" +
-                "id=" + id +
-                ", date=" + date +
-                ", customerDto=" + customerDto +
-                ", currencyDto=" + currencyDto +
-                ", amount=" + amount +
-                ", period=" + period +
-                ", marginRate=" + marginRate +
-                ", status='" + status + '\'' +
-                '}';
-    }
-
 }

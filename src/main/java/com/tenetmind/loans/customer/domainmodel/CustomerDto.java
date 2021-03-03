@@ -12,14 +12,4 @@ public class CustomerDto {
     private final String lastName;
     private final String pesel;
 
-    @Override
-    public String toString() {
-        return "CustomerDto{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", pesel='" + pesel + '\'' +
-                '}';
-    }
-
 }

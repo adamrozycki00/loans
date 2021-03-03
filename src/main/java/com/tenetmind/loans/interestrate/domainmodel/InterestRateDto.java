@@ -17,16 +17,5 @@ public class InterestRateDto {
     private final CurrencyDto currencyDto;
     private final BigDecimal rate;
 
-    @Override
-    public String toString() {
-        return "InterestRateDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", date=" + date +
-                ", currencyDto=" + currencyDto +
-                ", rate=" + rate +
-                '}';
-    }
-
 }
 

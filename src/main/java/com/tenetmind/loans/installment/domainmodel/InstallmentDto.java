@@ -20,17 +20,4 @@ public class InstallmentDto {
     private final BigDecimal principal;
     private final BigDecimal interest;
 
-    @Override
-    public String toString() {
-        return "InstallmentDto{" +
-                "id=" + id +
-                ", date=" + date +
-                ", loanId=" + loanId +
-                ", number=" + number +
-                ", currencyDto=" + currencyDto +
-                ", principal=" + principal +
-                ", interest=" + interest +
-                '}';
-    }
-
 }
