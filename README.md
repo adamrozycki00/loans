@@ -1,5 +1,5 @@
 # loans
-A simple service for private loan - the backend part
+A simple service for private loans - the backend part
 
 Link to the frontend part:
 https://github.com/adamrozycki00/loans-front
