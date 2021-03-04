@@ -15,9 +15,4 @@ public class BloombergRatesDto {
     @JsonProperty("result")
     private BloombergResultDto result;
 
-    @Override
-    public String toString() {
-        return "Bloomberg rates{" + result +
-                '}';
-    }
 }

@@ -21,12 +21,4 @@ public class BloombergSingleRateDto {
     @JsonProperty("last")
     private String rate;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "currency='" + currency + '\'' +
-                ", sourceCurrency='" + sourceCurrency + '\'' +
-                ", rate='" + rate + '\'' +
-                '}';
-    }
 }

@@ -26,13 +26,4 @@ public class NbpRatesDto {
     @JsonProperty("rates")
     private List<NbpMidRateDto> rates;
 
-    @Override
-    public String toString() {
-        return "NbpRatesDto{" +
-                "table='" + table + '\'' +
-                ", currency='" + currency + '\'' +
-                ", code='" + code + '\'' +
-                ", rates=" + rates +
-                '}';
-    }
 }

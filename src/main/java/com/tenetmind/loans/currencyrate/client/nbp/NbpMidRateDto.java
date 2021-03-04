@@ -21,12 +21,4 @@ public class NbpMidRateDto {
     @JsonProperty("mid")
     private String mid;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "no='" + no + '\'' +
-                ", effectiveDate='" + effectiveDate + '\'' +
-                ", mid='" + mid + '\'' +
-                '}';
-    }
 }

@@ -21,13 +21,4 @@ public class BloombergResultDto {
     @JsonProperty("GBPPLN:cur")
     private BloombergSingleRateDto gbpPlnRate;
 
-    @Override
-    public String toString() {
-        return "{" +
-                "eurPlnRate=" + eurPlnRate +
-                ", usdPlnRate=" + usdPlnRate +
-                ", gbpPlnRate=" + gbpPlnRate +
-                '}';
-    }
-
 }
