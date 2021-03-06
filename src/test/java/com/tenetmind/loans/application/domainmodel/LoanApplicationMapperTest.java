@@ -32,9 +32,6 @@ public class LoanApplicationMapperTest {
     private LoanApplicationMapper mapper;
 
     @Autowired
-    private LoanApplicationService service;
-
-    @Autowired
     private LoanApplicationRepository repository;
 
     @Autowired
