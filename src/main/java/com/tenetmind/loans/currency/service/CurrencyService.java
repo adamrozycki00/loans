@@ -48,7 +48,7 @@ public class CurrencyService {
                         repository.save(new Currency(name));
                     }
                 });
-        repository.save(new Currency("PLN"));
+        save(new Currency("PLN"));
     }
 
 }

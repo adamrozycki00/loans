@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 @Component
 public class AccountingUnitImpl implements AccountingUnit {
 
+    private static final String CLOSED = "Closed";
+
     @Autowired
     private OperationProcessor processor;
 
@@ -44,10 +46,10 @@ public class AccountingUnitImpl implements AccountingUnit {
         BigDecimal amountPaidOutOfSchedule = getAmountPaidOutOfSchedule(loan);
         paidAmountToSettle = paidAmountToSettle.add(amountPaidOutOfSchedule);
 
-        return getLoanSettled(loan, paidAmountToSettle);
+        return processSettlementOfPayment(loan, paidAmountToSettle);
     }
 
-    private Loan getLoanSettled(Loan loan, BigDecimal amountToSettle) {
+    private Loan processSettlementOfPayment(Loan loan, BigDecimal amountToSettle) {
         List<Installment> schedule = loan.getSchedule();
 
         while (amountToSettle.compareTo(BigDecimal.ZERO) > 0
@@ -61,17 +63,20 @@ public class AccountingUnitImpl implements AccountingUnit {
             BigDecimal amountInNextInstallmentToSettle =
                     interestInNextInstallmentToSettle.add(principalInNextInstallmentToSettle);
 
-            amountToSettle = recalculateAmountToSettle(loan, amountToSettle,
+            amountToSettle = settleInstallmentAndRecalculateAmountToSettle(loan, amountToSettle,
                     interestInNextInstallmentToSettle, principalInNextInstallmentToSettle, amountInNextInstallmentToSettle);
         }
+
+        if (loan.getAmountToPay().compareTo(BigDecimal.ZERO) == 0)
+            loan.setStatus(CLOSED);
 
         return loan;
     }
 
-    private BigDecimal recalculateAmountToSettle(Loan loan, BigDecimal paidAmountToSettle,
-                                                 BigDecimal interestInNextInstallmentToSettle,
-                                                 BigDecimal principalInNextInstallmentToSettle,
-                                                 BigDecimal amountInNextInstallmentToSettle) {
+    private BigDecimal settleInstallmentAndRecalculateAmountToSettle(Loan loan, BigDecimal paidAmountToSettle,
+                                                                     BigDecimal interestInNextInstallmentToSettle,
+                                                                     BigDecimal principalInNextInstallmentToSettle,
+                                                                     BigDecimal amountInNextInstallmentToSettle) {
         if (paidAmountToSettle.compareTo(amountInNextInstallmentToSettle) >= 0) {
             loan.setBalance(loan.getBalance().subtract(principalInNextInstallmentToSettle));
             loan.setAmountToPay(loan.getAmountToPay().subtract(amountInNextInstallmentToSettle));
