@@ -3,6 +3,7 @@ package com.tenetmind.loans.currencyrate.converter;
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
+import com.tenetmind.loans.currencyrate.controller.CurrencyRateNotFoundException;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.service.CurrencyRateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public abstract class CurrencyRateConverterImpl implements CurrencyRateConverter
     @Override
     public BigDecimal convert(BigDecimal originalAmount, String originalCurrencyName,
                               String outputCurrencyName, LocalDate date)
-            throws CurrencyRateConversionException, CurrencyNotFoundException {
+            throws CurrencyNotFoundException, CurrencyRateNotFoundException {
         Currency originalCurrency = currencyService.find(originalCurrencyName)
                 .orElseThrow(CurrencyNotFoundException::new);
         Currency outputCurrency = currencyService.find(outputCurrencyName)
@@ -64,36 +65,50 @@ public abstract class CurrencyRateConverterImpl implements CurrencyRateConverter
 
     @Override
     public BigDecimal convertToPln(BigDecimal originalAmount, String originalCurrencyName, LocalDate date)
-            throws CurrencyRateConversionException, CurrencyNotFoundException {
-        Currency originalCurrency = currencyService.find(originalCurrencyName)
-                .orElseThrow(CurrencyNotFoundException::new);
+            throws CurrencyNotFoundException, CurrencyRateNotFoundException {
 
-        if (originalCurrency.equals(new Currency("PLN"))) {
+        if (originalCurrencyName.equals("PLN")) {
             return originalAmount;
         }
 
-        Optional<CurrencyRate> originalRate = currencyRateService.find(currencyRateName, date, originalCurrency.getName());
-        return originalRate
-                .map(CurrencyRate::getRate)
-                .map(originalAmount::multiply)
-                .orElseThrow(CurrencyRateConversionException::new);
+        Optional<CurrencyRate> currentRate = getCurrentRate(originalCurrencyName, date);
+        if (currentRate.isEmpty()) throw new CurrencyRateNotFoundException();
+
+        BigDecimal rate = currentRate.get().getRate();
+        return originalAmount.multiply(rate).setScale(4, ROUND_HALF_EVEN);
     }
 
     @Override
     public BigDecimal convertFromPln(BigDecimal originalAmount, String outputCurrencyName, LocalDate date)
-            throws CurrencyRateConversionException, CurrencyNotFoundException {
-        Currency outputCurrency = currencyService.find(outputCurrencyName)
-                .orElseThrow(CurrencyNotFoundException::new);
+            throws CurrencyNotFoundException, CurrencyRateNotFoundException {
 
-        if (outputCurrency.equals(new Currency("PLN"))) {
+        if (outputCurrencyName.equals("PLN")) {
             return originalAmount;
         }
 
-        Optional<CurrencyRate> outputRate = currencyRateService.find(currencyRateName, date, outputCurrency.getName());
-        return outputRate
-                .map(CurrencyRate::getRate)
-                .map(rate -> originalAmount.divide(rate, 4, ROUND_HALF_EVEN))
-                .orElseThrow(CurrencyRateConversionException::new);
+        Optional<CurrencyRate> currentRate = getCurrentRate(outputCurrencyName, date);
+        if (currentRate.isEmpty()) throw new CurrencyRateNotFoundException();
+
+        BigDecimal rate = currentRate.get().getRate();
+        return originalAmount.divide(rate, 4, ROUND_HALF_EVEN);
+    }
+
+    public Optional<CurrencyRate> getCurrentRate(String currencyName, LocalDate date)
+            throws CurrencyNotFoundException {
+        Optional<CurrencyRate> currentRate = Optional.empty();
+
+        for (int i = 1; i < 5; ++i) {
+            currentRate = getRateOnDate(currencyName, date.minusDays(i));
+            if (currentRate.isPresent()) break;
+        }
+
+        return currentRate;
+    }
+
+    private Optional<CurrencyRate> getRateOnDate(String currencyName, LocalDate date)
+            throws CurrencyNotFoundException {
+        currencyService.find(currencyName).orElseThrow(CurrencyNotFoundException::new);
+        return currencyRateService.find(getCurrencyRateName(), date, currencyName);
     }
 
 }

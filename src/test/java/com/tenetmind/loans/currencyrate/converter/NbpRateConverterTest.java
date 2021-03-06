@@ -4,6 +4,7 @@ import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.repository.CurrencyRepository;
 import com.tenetmind.loans.currency.service.CurrencyService;
+import com.tenetmind.loans.currencyrate.controller.CurrencyRateNotFoundException;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import com.tenetmind.loans.currencyrate.service.CurrencyRateService;
@@ -53,6 +54,7 @@ public class NbpRateConverterTest {
     public void setUp() {
         currencyRateRepository.deleteAll();
         currencyRepository.deleteAll();
+        currencyService.populateWithMainCurrencies();
     }
 
     @After
@@ -62,21 +64,15 @@ public class NbpRateConverterTest {
     }
 
     @Test
-    public void shouldConvertGivenCurrencies() throws CurrencyRateConversionException, CurrencyNotFoundException {
+    public void shouldConvertGivenCurrencies() throws CurrencyNotFoundException, CurrencyRateNotFoundException {
         //given
-        Currency pln = new Currency("pln");
-        currencyService.save(pln);
+        Currency eur = currencyService.find("eur").get();
+        Currency usd = currencyService.find("usd").get();
 
-        Currency eur = new Currency("eur");
-        currencyService.save(eur);
-
-        Currency usd = new Currency("usd");
-        currencyService.save(usd);
-
-        CurrencyRate eurRate = new CurrencyRate("NBP", LocalDate.now(), eur, new BigDecimal("4.0000"));
+        CurrencyRate eurRate = new CurrencyRate("NBP", LocalDate.now().minusDays(1), eur, new BigDecimal("4.0000"));
         currencyRateService.save(eurRate);
 
-        CurrencyRate usdRate = new CurrencyRate("NBP", LocalDate.now(), usd, new BigDecimal("3.0000"));
+        CurrencyRate usdRate = new CurrencyRate("NBP", LocalDate.now().minusDays(1), usd, new BigDecimal("3.0000"));
         currencyRateService.save(usdRate);
 
         //when

@@ -1,13 +1,11 @@
 package com.tenetmind.loans.operation.service;
 
 import com.tenetmind.loans.application.controller.LoanApplicationNotFoundException;
-import com.tenetmind.loans.application.domainmodel.LoanApplication;
 import com.tenetmind.loans.application.service.InvalidApplicationStatusException;
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
-import com.tenetmind.loans.currencyrate.converter.CurrencyRateConversionException;
-import com.tenetmind.loans.customer.domainmodel.Customer;
+import com.tenetmind.loans.currencyrate.controller.CurrencyRateNotFoundException;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.loan.service.InvalidLoanStatusException;
@@ -75,7 +73,7 @@ public class OperationService {
         repository.deleteById(id);
     }
 
-    public void makeLoan(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyRateConversionException,
+    public void makeLoan(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyRateNotFoundException,
             LoanNotFoundException, InvalidLoanStatusException, LoanApplicationNotFoundException,
             InvalidApplicationStatusException {
 
@@ -86,9 +84,9 @@ public class OperationService {
         loanService.save(loanAfterSettlementOfMakingLoan);
     }
 
-    public void payInstallment(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyRateConversionException,
-            PaymentAmountException, LoanNotFoundException, InvalidLoanStatusException, LoanApplicationNotFoundException,
-            InvalidApplicationStatusException {
+    public void payInstallment(PaymentDto paymentDto) throws CurrencyNotFoundException, CurrencyRateNotFoundException,
+            PaymentAmountException, LoanNotFoundException, InvalidLoanStatusException,
+            LoanApplicationNotFoundException, InvalidApplicationStatusException {
         Operation installmentPayment = processor.prepareInstallmentPayment(paymentDto);
         save(installmentPayment);
 

@@ -3,10 +3,8 @@ package com.tenetmind.loans.operation.service.processor;
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
-import com.tenetmind.loans.currencyrate.converter.CurrencyRateConversionException;
+import com.tenetmind.loans.currencyrate.controller.CurrencyRateNotFoundException;
 import com.tenetmind.loans.currencyrate.converter.CurrencyRateConverter;
-import com.tenetmind.loans.currencyrate.converter.CurrencyRateConverterImpl;
-import com.tenetmind.loans.currencyrate.converter.NbpRateConverter;
 import com.tenetmind.loans.loan.controller.LoanNotFoundException;
 import com.tenetmind.loans.loan.domainmodel.Loan;
 import com.tenetmind.loans.loan.service.LoanService;
@@ -42,7 +40,7 @@ public class OperationProcessor {
     }
 
     public Operation prepareMakingLoan(PaymentDto paymentDto) throws CurrencyNotFoundException,
-            CurrencyRateConversionException, LoanNotFoundException {
+            CurrencyRateNotFoundException, LoanNotFoundException {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
 
@@ -55,7 +53,7 @@ public class OperationProcessor {
     }
 
     public Operation prepareInstallmentPayment(PaymentDto paymentDto)
-            throws CurrencyNotFoundException, CurrencyRateConversionException,
+            throws CurrencyNotFoundException, CurrencyRateNotFoundException,
             PaymentAmountException, LoanNotFoundException {
         if (paymentAmountIsIncorrect(paymentDto)) {
             throw new PaymentAmountException();
@@ -76,7 +74,7 @@ public class OperationProcessor {
     }
 
     public BigDecimal getAmountInLoanCurrency(PaymentDto paymentDto)
-            throws CurrencyNotFoundException, CurrencyRateConversionException, LoanNotFoundException {
+            throws CurrencyNotFoundException, CurrencyRateNotFoundException, LoanNotFoundException {
         Loan loan = loanService.findById(paymentDto.getLoanId())
                 .orElseThrow(LoanNotFoundException::new);
 
