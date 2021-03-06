@@ -12,6 +12,7 @@ public interface AccountingUnit {
 
     Loan prepareSettlementOfMakingLoan(PaymentDto paymentDto) throws LoanNotFoundException;
 
-    Loan prepareSettlementOfPayment(PaymentDto paymentDto) throws CurrencyNotFoundException, LoanNotFoundException, CurrencyRateNotFoundException;
+    Loan prepareSettlementOfPayment(PaymentDto paymentDto) throws CurrencyNotFoundException,
+            CurrencyRateNotFoundException, LoanNotFoundException;
 
 }

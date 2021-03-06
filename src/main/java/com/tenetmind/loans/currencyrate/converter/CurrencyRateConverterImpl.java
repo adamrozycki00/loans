@@ -20,21 +20,13 @@ import static java.math.BigDecimal.ROUND_HALF_EVEN;
 @Scope("prototype")
 public abstract class CurrencyRateConverterImpl implements CurrencyRateConverter {
 
-    private String currencyRateName = "";
-
-    @Autowired
-    private CurrencyRateService currencyRateService;
+    protected String currencyRateName = "";
 
     @Autowired
     private CurrencyService currencyService;
 
-    public String getCurrencyRateName() {
-        return currencyRateName;
-    }
-
-    protected void setCurrencyRateName(String currencyRateName) {
-        this.currencyRateName = currencyRateName;
-    }
+    @Autowired
+    private CurrencyRateService currencyRateService;
 
     @Override
     public BigDecimal convert(BigDecimal originalAmount, String originalCurrencyName,
@@ -71,7 +63,7 @@ public abstract class CurrencyRateConverterImpl implements CurrencyRateConverter
             return originalAmount;
         }
 
-        Optional<CurrencyRate> currentRate = getCurrentRate(originalCurrencyName, date);
+        Optional<CurrencyRate> currentRate = currencyRateService.getCurrentRate(originalCurrencyName, date);
         if (currentRate.isEmpty()) throw new CurrencyRateNotFoundException();
 
         BigDecimal rate = currentRate.get().getRate();
@@ -86,29 +78,11 @@ public abstract class CurrencyRateConverterImpl implements CurrencyRateConverter
             return originalAmount;
         }
 
-        Optional<CurrencyRate> currentRate = getCurrentRate(outputCurrencyName, date);
+        Optional<CurrencyRate> currentRate = currencyRateService.getCurrentRate(outputCurrencyName, date);
         if (currentRate.isEmpty()) throw new CurrencyRateNotFoundException();
 
         BigDecimal rate = currentRate.get().getRate();
         return originalAmount.divide(rate, 4, ROUND_HALF_EVEN);
-    }
-
-    public Optional<CurrencyRate> getCurrentRate(String currencyName, LocalDate date)
-            throws CurrencyNotFoundException {
-        Optional<CurrencyRate> currentRate = Optional.empty();
-
-        for (int i = 1; i < 5; ++i) {
-            currentRate = getRateOnDate(currencyName, date.minusDays(i));
-            if (currentRate.isPresent()) break;
-        }
-
-        return currentRate;
-    }
-
-    private Optional<CurrencyRate> getRateOnDate(String currencyName, LocalDate date)
-            throws CurrencyNotFoundException {
-        currencyService.find(currencyName).orElseThrow(CurrencyNotFoundException::new);
-        return currencyRateService.find(getCurrencyRateName(), date, currencyName);
     }
 
 }

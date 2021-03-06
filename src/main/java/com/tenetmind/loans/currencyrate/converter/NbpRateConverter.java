@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class NbpRateConverter extends CurrencyRateConverterImpl {
 
-    {
-        setCurrencyRateName("NBP");
+    public NbpRateConverter() {
+        this.currencyRateName = "NBP";
     }
 
 }

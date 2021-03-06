@@ -3,8 +3,7 @@ package com.tenetmind.loans.currencyrate.service;
 import com.tenetmind.loans.currency.controller.CurrencyNotFoundException;
 import com.tenetmind.loans.currency.domainmodel.Currency;
 import com.tenetmind.loans.currency.service.CurrencyService;
-import com.tenetmind.loans.currencyrate.client.bloomberg.BloombergService;
-import com.tenetmind.loans.currencyrate.client.nbp.NbpService;
+import com.tenetmind.loans.currencyrate.client.CurrencyRateClientService;
 import com.tenetmind.loans.currencyrate.domainmodel.CurrencyRate;
 import com.tenetmind.loans.currencyrate.repository.CurrencyRateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +24,7 @@ public class CurrencyRateService {
     private CurrencyService currencyService;
 
     @Autowired
-    private NbpService nbpService;
-
-    @Autowired
-    private BloombergService bloombergService;
+    private CurrencyRateClientService clientService;
 
     public List<CurrencyRate> findAll() {
         return repository.findAll();
@@ -57,24 +52,21 @@ public class CurrencyRateService {
     }
 
     public boolean checkForUpToDateRate(String currencyName) throws CurrencyNotFoundException {
-        addTodaysRates();
 
         Optional<Currency> retrievedCurrency = currencyService.find(currencyName);
         if (retrievedCurrency.isEmpty()) {
             throw new CurrencyNotFoundException();
         }
 
-        List<CurrencyRate> todaysRate = repository.findByDateAndCurrency(LocalDate.now(), retrievedCurrency.get());
-        return !todaysRate.isEmpty();
+        return getCurrentRate(currencyName, LocalDate.now()).isPresent();
     }
 
-    @Scheduled(cron = "0 0/30 * * * *")
+    @Scheduled(cron = "0 15 12 * * Mon-Fri")
     public void addTodaysRates() {
         currencyService.getNamesOfMainCurrencies()
                 .forEach(name -> {
                     try {
-                        nbpService.getAndSave(name);
-                        bloombergService.getAndSave(name);
+                        clientService.getAndSave(name);
                     } catch (CurrencyNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -84,24 +76,34 @@ public class CurrencyRateService {
     public void prepareDatabase(LocalDate startingDate) {
         currencyService.populateWithMainCurrencies();
 
-        List<String> currencyNames = currencyService.getNamesOfMainCurrencies();
+        currencyService.getNamesOfMainCurrencies().forEach(currency ->
+                startingDate.datesUntil(LocalDate.now())
+                        .forEach(date -> {
+                            try {
+                                clientService.getAndSave(currency, date);
+                            } catch (CurrencyNotFoundException e) {
+                                e.printStackTrace();
+                            }
+                        })
+        );
+    }
 
-        currencyNames.forEach(currency -> {
-            startingDate.datesUntil(LocalDate.now().plusDays(1))
-                    .forEach(date -> {
-                        try {
-                            nbpService.getAndSave(currency, date);
-                        } catch (CurrencyNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                    });
+    public Optional<CurrencyRate> getCurrentRate(String currencyName, LocalDate date)
+            throws CurrencyNotFoundException {
+        Optional<CurrencyRate> currentRate = Optional.empty();
 
-            try {
-                bloombergService.getAndSave(currency);
-            } catch (CurrencyNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
+        for (int i = 1; i < 5; ++i) {
+            currentRate = getRateOnDate(currencyName, date.minusDays(i));
+            if (currentRate.isPresent()) break;
+        }
+
+        return currentRate;
+    }
+
+    private Optional<CurrencyRate> getRateOnDate(String currencyName, LocalDate date)
+            throws CurrencyNotFoundException {
+        currencyService.find(currencyName).orElseThrow(CurrencyNotFoundException::new);
+        return find(clientService.getName(), date, currencyName);
     }
 
 }
