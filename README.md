@@ -1,9 +1,7 @@
 # loans
-A simple service for private loans - the backend part
+*A simple service for private loans - the backend part*
 
-Link to the frontend part:
+Link to the repository for the frontend part:
 https://github.com/adamrozycki00/loans-front
 
-The backend and frontend applications currently are meant to be deplyed on localhost. Before running the frontend, please make sure that the backend application is running.
-
-Before running the backend, please change approprietly the `application.properties` file in terms of configuration of the MySQL database access.
+The frontend application currently is meant to be deployed on localhost, while the backend application has been deployed on a Heroku server at the source endpoint: https://tenetmind-loans.herokuapp.com/v1/.
