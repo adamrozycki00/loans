@@ -63,8 +63,8 @@ public class AccountingUnitImpl implements AccountingUnit {
             BigDecimal amountInNextInstallmentToSettle =
                     interestInNextInstallmentToSettle.add(principalInNextInstallmentToSettle);
 
-            amountToSettle = settleInstallmentAndRecalculateAmountToSettle(loan, amountToSettle,
-                    interestInNextInstallmentToSettle, principalInNextInstallmentToSettle, amountInNextInstallmentToSettle);
+            amountToSettle = settleNextInstallment(loan, amountToSettle, interestInNextInstallmentToSettle,
+                    principalInNextInstallmentToSettle, amountInNextInstallmentToSettle);
         }
 
         if (loan.getAmountToPay().compareTo(BigDecimal.ZERO) == 0)
@@ -73,25 +73,25 @@ public class AccountingUnitImpl implements AccountingUnit {
         return loan;
     }
 
-    private BigDecimal settleInstallmentAndRecalculateAmountToSettle(Loan loan, BigDecimal paidAmountToSettle,
-                                                                     BigDecimal interestInNextInstallmentToSettle,
-                                                                     BigDecimal principalInNextInstallmentToSettle,
-                                                                     BigDecimal amountInNextInstallmentToSettle) {
-        if (paidAmountToSettle.compareTo(amountInNextInstallmentToSettle) >= 0) {
+    private BigDecimal settleNextInstallment(Loan loan, BigDecimal amountToSettle,
+                                             BigDecimal interestInNextInstallmentToSettle,
+                                             BigDecimal principalInNextInstallmentToSettle,
+                                             BigDecimal amountInNextInstallmentToSettle) {
+        if (amountToSettle.compareTo(amountInNextInstallmentToSettle) >= 0) {
             loan.setBalance(loan.getBalance().subtract(principalInNextInstallmentToSettle));
             loan.setAmountToPay(loan.getAmountToPay().subtract(amountInNextInstallmentToSettle));
-            paidAmountToSettle = paidAmountToSettle.subtract(amountInNextInstallmentToSettle);
+            amountToSettle = amountToSettle.subtract(amountInNextInstallmentToSettle);
             loan.setNumberOfInstallmentsPaid(loan.getNumberOfInstallmentsPaid() + 1);
-        } else if (paidAmountToSettle.compareTo(interestInNextInstallmentToSettle) >= 0) {
-            loan.setAmountToPay(loan.getAmountToPay().subtract(paidAmountToSettle));
-            paidAmountToSettle = paidAmountToSettle.subtract(interestInNextInstallmentToSettle);
-            loan.setBalance(loan.getBalance().subtract(paidAmountToSettle));
-            paidAmountToSettle = BigDecimal.ZERO;
+        } else if (amountToSettle.compareTo(interestInNextInstallmentToSettle) >= 0) {
+            loan.setAmountToPay(loan.getAmountToPay().subtract(amountToSettle));
+            amountToSettle = amountToSettle.subtract(interestInNextInstallmentToSettle);
+            loan.setBalance(loan.getBalance().subtract(amountToSettle));
+            amountToSettle = BigDecimal.ZERO;
         } else {
-            loan.setAmountToPay(loan.getAmountToPay().subtract(paidAmountToSettle));
-            paidAmountToSettle = BigDecimal.ZERO;
+            loan.setAmountToPay(loan.getAmountToPay().subtract(amountToSettle));
+            amountToSettle = BigDecimal.ZERO;
         }
-        return paidAmountToSettle;
+        return amountToSettle;
     }
 
     private Installment getNextInstallmentToSettle(List<Installment> schedule, int currentNumberOfInstallmentsSettled) {
